@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply font-sans text-[16px] min-w-[320px] text-[#303030];
+  }
+
+  * {
+    @apply text-[1rem] break-words min-w-[0] focus-visible:outline-none focus:outline-none;
+  }
+
+  main {
+    @apply min-h-[100vh];
+  }
+}
+
+@layer utilities {
+  .content-positioner {
+    @apply m-[0_auto] px-[15px];
+  }
+
+  .transition-custom {
+    @apply transition-all duration-300;
+  }
+}
+
+@layer components {
+  .password-icon {
+    @apply p-[2px] text-[1.5rem] absolute top-[50%] translate-y-[-50%] right-[5px] cursor-pointer shadow-[inset_0_0_3px_1px_#a7a7a7] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-custom rounded-[3px];
+  }
+
+  .icon-button {
+    @apply p-[2px] flex items-center w-[1.5rem] h-[1.5rem] justify-center cursor-pointer bg-[#fff] shadow-[inset_0_0_3px_1px_#a7a7a7] border border-[#c0c0c0] transition-custom rounded-[3px];
+  }
+
+  .icon-button.hover {
+    @apply hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf];
+  }
+
+  .icon-button.highlighted {
+    @apply shadow-[inset_0_0_3px_1px_#8563c5] text-[#7a54bf];
+  }
+
+  .list-element {
+    @apply relative flex items-center gap-[10px] bg-[#fff] shadow-[inset_0_0_0_0_#fff,0_0_0_1px_#d0d0d0] p-[10px] rounded-[3px];
+  }
+
+  .list-element.button {
+    @apply hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-custom;
+  }
+}
