@@ -6,13 +6,8 @@ import {
   tStoragePayload,
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
-import {
-  bcryptCompare,
-  tweetNaClEncryptData,
-  queryManager,
-} from '../general/middlewares';
+import { bcryptCompare, tweetNaClEncryptData } from '../general/middlewares';
 import { validateInput, validatePassword } from '../general/validations';
-import { errorHandler } from '../general/error';
 import { toast } from 'react-toastify';
 
 // Validate login form data
@@ -192,16 +187,7 @@ export const storageExportData = async (
 ) => {
   const encodedData = tweetNaClEncryptData(decodedData, password);
   if (encodedData) {
-    try {
-      await queryManager('put', '/api/storage', {
-        encodedData: encodedData,
-      });
-      toast.success('Successful export');
-      return true;
-    } catch (error) {
-      errorHandler(error);
-      return false;
-    }
+    // TODO store data into a local file
   } else {
     toast.error('Encryption failed, please try to export again');
     return false;

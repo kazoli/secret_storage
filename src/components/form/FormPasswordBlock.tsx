@@ -24,7 +24,7 @@ function FormPasswordBlock(props: tProps) {
       id={props.id}
       placeholder={props.placeholder}
       autocomplete="off"
-      onPaste={false}
+      onPaste={true}
       value={props.password}
       action={(value) => props.action(value)}
       error={props.passwordError}

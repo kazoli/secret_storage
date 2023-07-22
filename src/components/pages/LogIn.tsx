@@ -8,13 +8,13 @@ import { storageSettings } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import {
   bcryptHash,
-  queryManager,
   tweetNaClDecryptData,
 } from '../../app/general/middlewares';
 import { storageLoginValidate } from '../../app/storage/storageMiddlewares';
 import DefaultLayout from '../layout/DefaultLayout';
-import FormButtonBlock from '../form/FormButtonBlock';
+import FormFileBlock from '../form/FormFileBlock';
 import FormPasswordBlock from '../form/FormPasswordBlock';
+import FormButtonBlock from '../form/FormButtonBlock';
 
 function LogIn() {
   useEffect(() => {
@@ -27,24 +27,30 @@ function LogIn() {
   useEffect(() => {
     if (storageState.loggedIn) {
       navigate('/');
-    } else {
-      queryManager('get', '/api/storage').then(
-        (result: false | tStoragePayload['initializeData']) => {
-          if (result && result.encodedData) {
-            storageDispatch({
-              type: tStorageActionTypes.initializeData,
-              payload: result,
-            });
-          }
-        },
-      );
     }
   }, [storageState.loggedIn]);
 
   const [formData, setFormData] = useState({
+    file: storageSettings.fileUploadText,
     password: '',
-    passwordError: '',
   });
+  const [formErrors, setFormErrors] = useState({
+    file: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    let data = '';
+    if (formData.file !== storageSettings.fileUploadText) {
+      // open a file from the filesystem
+      // reset file to initial state
+      // setFormErrors({ ...formErrors, file: storageSettings.fileUploadText });
+    }
+    storageDispatch({
+      type: tStorageActionTypes.initializeData,
+      payload: { encodedData: data },
+    });
+  }, [formData.file]);
 
   const onSubmit = async (event: void | React.FormEvent<HTMLFormElement>) => {
     // prevent default submit if submit by enter on input
@@ -84,7 +90,7 @@ function LogIn() {
         type: tStorageActionTypes.setStatus,
         payload: 'idle',
       });
-      setFormData({ ...formData, passwordError: error });
+      setFormErrors({ ...formErrors, password: error });
     } else {
       // hashing entered password for secure using
       data.encodedPassword = await bcryptHash(formData.password);
@@ -104,12 +110,20 @@ function LogIn() {
         onSubmit={onSubmit}
         className="m-[0_auto] p-[10px_15px] rounded-[5px] bg-[#eee9f7] shadow-[inset_0_0_50px_0_#e2daf1,0_0_3px_0_#777] max-w-[500px]"
       >
+        <FormFileBlock
+          label="Storage file type"
+          buttonText="Select a file"
+          fileText={formData.file}
+          accept="application/json"
+          action={(value) => setFormData({ ...formData, file: value })}
+          error={formErrors.file}
+        />
         <FormPasswordBlock
           label="Password"
           id="password"
           placeholder={`${storageSettings.passwordLength.min} - ${storageSettings.passwordLength.max} characters`}
           password={formData.password}
-          passwordError={formData.passwordError}
+          passwordError={formErrors.password}
           action={(value) => setFormData({ ...formData, password: value })}
         />
         <FormButtonBlock buttons={buttons} />

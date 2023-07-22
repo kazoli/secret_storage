@@ -1,8 +1,6 @@
-import axios from 'axios';
 import bcrypt from 'bcryptjs-react';
 import tweetnacl from 'tweetnacl';
 import util from 'tweetnacl-util';
-import { errorHandler } from './error';
 import { tStorageInitialState } from '../storage/storageTypes';
 
 // Scroll to element
@@ -37,25 +35,6 @@ export const getLocalStorage = (key: string) => {
     }
   } else {
     return null;
-  }
-};
-
-// Manage any query
-export const queryManager = async (
-  method: 'get' | 'put',
-  url: string,
-  data: any = '',
-) => {
-  try {
-    const response = await axios({
-      method: method,
-      url: url,
-      data: data,
-    });
-    return response.data;
-  } catch (error) {
-    errorHandler(error);
-    return false;
   }
 };
 

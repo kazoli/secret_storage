@@ -4,6 +4,7 @@ import { getLocalStorage } from '../general/middlewares';
 
 export const storageSettings = {
   localStorage: { viewKey: 'secretStorageView' },
+  fileUploadText: 'New file',
   passwordCheckError: 'Password is not correct',
   passwordLength: { min: 6, max: 20 },
   titleLength: { min: 3, max: 200 },
