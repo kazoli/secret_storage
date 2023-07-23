@@ -26,6 +26,7 @@ export const storageReducer = (
     case tStorageActionTypes.initializeData:
       state = {
         ...state,
+        fileName: action.payload.fileName,
         encodedData: action.payload.encodedData,
       };
       return state;

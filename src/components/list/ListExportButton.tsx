@@ -11,6 +11,7 @@ function ListExportButton() {
         storageDispatch({
           type: tStorageActionTypes.setCustomConfirm,
           payload: storageExportConfirm(
+            storageState.fileName,
             storageState.decodedData,
             storageState.encodedPassword,
             storageDispatch,

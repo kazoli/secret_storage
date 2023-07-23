@@ -19,6 +19,7 @@ export type tStorageInitialState = {
   customConfirm: undefined | tCustomConfirm;
   dataBlockEditor: boolean | tStorageDataBlock;
   exportAvailable: boolean;
+  fileName: string;
   decodedData: tStorageDataBlock[];
 };
 
@@ -46,6 +47,7 @@ export type tStoragePayload = {
   [tStorageActionTypes.setStatus]: tStorageInitialState['status'];
   [tStorageActionTypes.initializeData]: {
     encodedData: tStorageInitialState['encodedData'];
+    fileName: tStorageInitialState['fileName'];
   };
   [tStorageActionTypes.setData]: {
     encodedPassword: tStorageInitialState['encodedPassword'];

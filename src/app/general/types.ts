@@ -16,6 +16,9 @@ export type tDropDownOption = {
   value: string | JSX.Element;
 };
 
+// General type to returning content of file read
+export type tFileContent = string | ArrayBuffer | null;
+
 // General type to button block
 export type tButtonBlock = { text: string; action: () => void }[];
 

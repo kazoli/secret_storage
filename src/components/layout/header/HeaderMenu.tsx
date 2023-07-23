@@ -58,6 +58,7 @@ function HeaderMenu(props: tProps) {
         storageDispatch({
           type: tStorageActionTypes.setCustomConfirm,
           payload: storageExportConfirm(
+            storageState.fileName,
             storageState.decodedData,
             storageState.encodedPassword,
             storageDispatch,

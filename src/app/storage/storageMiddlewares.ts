@@ -153,6 +153,7 @@ export const storageConfirmDefaultCancel = (
 
 // Export confirm data to dispatches of export buttons
 export const storageExportConfirm = (
+  fileName: tStorageInitialState['fileName'],
   decodedData: tStorageInitialState['decodedData'],
   encodedPassword: string,
   storageDispatch: React.Dispatch<tStorageActions>,
@@ -168,7 +169,7 @@ export const storageExportConfirm = (
   ok: {
     text: 'Export data into file',
     action: (password) => {
-      storageExportData(decodedData, password!).then((result) => {
+      storageExportData(fileName, decodedData, password!).then((result) => {
         if (result) {
           storageDispatch({
             type: tStorageActionTypes.setExportUnavailable,
@@ -182,12 +183,35 @@ export const storageExportConfirm = (
 
 // Encode and export data
 export const storageExportData = async (
+  fileName: string,
   decodedData: tStorageInitialState['decodedData'],
   password: string,
 ) => {
   const encodedData = tweetNaClEncryptData(decodedData, password);
   if (encodedData) {
-    // TODO store data into a local file
+    const data = JSON.stringify({ encodedData: encodedData });
+    // create a blob
+    const file = new Blob([data], { type: 'application/json' });
+    // create a string containing a URL representing the file data given in the parameter
+    const url = URL.createObjectURL(file);
+    // create dinamically a link
+    const a = document.createElement('a');
+    // add url to href of link
+    a.href = url;
+    // set default file name at saving
+    a.download = fileName;
+    // append link to body
+    document.body.appendChild(a);
+    // dinamically click on the link
+    a.click();
+    // wait a moment to not trigger instantly
+    setTimeout(function () {
+      // dinamically remove the appended link
+      document.body.removeChild(a);
+      // remove object URL which was previously created
+      window.URL.revokeObjectURL(url);
+    }, 0);
+    return true;
   } else {
     toast.error('Encryption failed, please try to export again');
     return false;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { tFileContent } from '../../app/general/types';
 import {
   tStorageActionTypes,
   tStoragePayload,
@@ -31,27 +32,73 @@ function LogIn() {
   }, [storageState.loggedIn]);
 
   const [formData, setFormData] = useState({
-    file: storageSettings.fileUploadText,
     password: '',
   });
   const [formErrors, setFormErrors] = useState({
-    file: '',
     password: '',
+    file: '',
   });
 
-  useEffect(() => {
-    let data = '';
-    if (formData.file !== storageSettings.fileUploadText) {
-      // open a file from the filesystem
-      // reset file to initial state
-      // setFormErrors({ ...formErrors, file: storageSettings.fileUploadText });
+  // Parse content of opened file
+  const getStorageFileContent = (
+    fileName: string,
+    fileContent: tFileContent,
+  ) => {
+    // reset previous content
+    if (storageState.encodedData) {
+      storageDispatch({
+        type: tStorageActionTypes.initializeData,
+        payload: {
+          fileName: storageSettings.defaultFileName,
+          encodedData: '',
+        },
+      });
     }
-    storageDispatch({
-      type: tStorageActionTypes.initializeData,
-      payload: { encodedData: data },
-    });
-  }, [formData.file]);
+    if (typeof fileContent === 'string') {
+      if (fileContent) {
+        try {
+          const content = JSON.parse(fileContent);
+          if (content['encodedData']) {
+            setFormErrors({
+              ...formErrors,
+              file: '',
+            });
+            storageDispatch({
+              type: tStorageActionTypes.initializeData,
+              payload: {
+                fileName: fileName,
+                encodedData: content.encodedData,
+              },
+            });
+          } else {
+            setFormErrors({
+              ...formErrors,
+              file: 'Wrong structure of the file content',
+            });
+          }
+        } catch (error) {
+          console.error(error);
+          setFormErrors({
+            ...formErrors,
+            file: 'Selected file content cannot be parsed',
+          });
+        }
+      } else {
+        // empty string means new file
+        setFormErrors({
+          ...formErrors,
+          file: '',
+        });
+      }
+    } else {
+      setFormErrors({
+        ...formErrors,
+        file: 'File has wrong type or no content',
+      });
+    }
+  };
 
+  // Submit password parse and log in
   const onSubmit = async (event: void | React.FormEvent<HTMLFormElement>) => {
     // prevent default submit if submit by enter on input
     event && event.preventDefault();
@@ -113,9 +160,9 @@ function LogIn() {
         <FormFileBlock
           label="Storage file type"
           buttonText="Select a file"
-          fileText={formData.file}
+          defaultText={storageSettings.fileUploadText}
           accept="application/json"
-          action={(value) => setFormData({ ...formData, file: value })}
+          contentAction={getStorageFileContent}
           error={formErrors.file}
         />
         <FormPasswordBlock
