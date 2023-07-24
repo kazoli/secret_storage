@@ -31,6 +31,7 @@ function ListSearch() {
         onChange={(e) => setKeywords(e.target.value)}
       />
       <button
+        id="list-clear-keywords-button"
         className="icon-button hover"
         title="Clear text"
         onClick={() => setKeywords('')}

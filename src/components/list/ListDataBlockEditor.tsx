@@ -63,6 +63,12 @@ function ListDataBlockEditor(props: tProps) {
           payload: 'idle',
         });
       } else {
+        // emptying keywords to avoid new element does not appear that caused by list filtering
+        const listClearKeywordsButton = document.getElementById(
+          'list-clear-keywords-button',
+        );
+        listClearKeywordsButton && listClearKeywordsButton.click();
+        // dispatch newly created data
         storageDispatch({
           type: tStorageActionTypes.setDataBlock,
           payload: {
