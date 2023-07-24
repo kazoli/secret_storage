@@ -5,6 +5,7 @@ Only frontend based codes, no backend or any data movement outside your browser.
 LIVE DEMO
 
 1. https://kazoli.github.io/secret_storage
+2. Download the serverless build, unzip it, go into the unzipped folder and click twice on index.html to run: https://github.com/kazoli/secret_storage/blob/master/serverless-build.zip
 
 #FEATURES
 
