@@ -79,7 +79,7 @@ const tweetNaClSecretBoxParts = (password: string) => {
     } else {
       // End position is over the full hash length so start from the beginning
       positions.start = 0;
-      positions.end = length - 1;
+      positions.end = length;
     }
     //Return subarray of full hash
     return fullHash.subarray(positions.start, positions.end);
