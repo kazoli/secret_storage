@@ -2,6 +2,10 @@
 
 Only frontend based codes, no backend or any data movement outside your browser. Vite, React and Typescript. Crypting by TweetNaCl.
 
+LIVE DEMO
+
+1. https://kazoli.github.io/secret_storage
+
 #FEATURES
 
 1. You can select an encoded file to decode or do not select any one and it will create a new one.
@@ -38,4 +42,4 @@ Only frontend based codes, no backend or any data movement outside your browser.
 2. Use a command line, enter in the main folder and run this command: "npm run sls-build"
 3. In main folder a "build" subfolder will be created
 4. Enter into the "build" subfolder and click twice on index.html and it will work
-5. You can move it anywhere in your file system and rename the folder whatever you want eg.: secret-storage
+5. You can move the folder anywhere in your file system and rename it whatever you want eg.: secret-storage

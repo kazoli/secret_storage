@@ -29,7 +29,7 @@ function HeaderMenu(props: tProps) {
   }
 
   const logOutConfirm: tCustomConfirm = {
-    text: 'You have some unexported data in the list. Are you sure to continue to log out without exporting your data?',
+    text: 'You have changed data in the list and it has not been exported. Are you sure to continue to log out without exporting your data?',
     ok: {
       text: 'Continue',
       action: () => {
