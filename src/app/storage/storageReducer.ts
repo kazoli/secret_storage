@@ -5,8 +5,8 @@ import {
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import { setLocalStorage } from '../general/middlewares';
-import { v4 as uuidV4 } from 'uuid';
 import { storageRepositionDataBlock } from './storageMiddlewares';
+import { v4 as uuidV4 } from 'uuid';
 
 // Storage reducer
 export const storageReducer = (

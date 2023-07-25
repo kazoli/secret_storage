@@ -2,6 +2,7 @@ import { tDropDownOption } from '../general/types';
 import { tStorageInitialState } from './storageTypes';
 import { getLocalStorage } from '../general/middlewares';
 
+// Storage default settings
 export const storageSettings = {
   localStorage: { viewKey: 'secretStorageView' },
   defaultFileName: 'secret-storage.json',
@@ -12,7 +13,7 @@ export const storageSettings = {
   dataLength: { min: 5, max: 10000 },
 };
 
-// Base state of limits of artwork pages
+// Base state of storage search types
 export const storageSearchTypes: tDropDownOption[] = [
   { key: 'all', value: 'Search in: all' },
   { key: 'title', value: 'Search in: title' },

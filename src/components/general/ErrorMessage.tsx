@@ -5,11 +5,9 @@ type tProps = {
 
 function ErrorMessage(props: tProps) {
   return (
-    <>
-      {props.text && (
-        <div className={`text-[#ff0000] ${props.style}`}>{props.text}</div>
-      )}
-    </>
+    props.text && (
+      <div className={`text-[#ff0000] ${props.style}`}>{props.text}</div>
+    )
   );
 }
 

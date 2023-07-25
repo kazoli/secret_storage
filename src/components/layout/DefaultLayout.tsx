@@ -17,6 +17,7 @@ function DefaultLayout(props: tProps) {
     scrollToElement();
   }, []);
 
+  // if user try to leave page without exporting modifications
   useBeforeUnloadConfirm();
 
   return (

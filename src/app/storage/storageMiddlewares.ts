@@ -193,7 +193,7 @@ export const storageExportData = async (
     // create a blob
     const file = new Blob([data], { type: 'application/json' });
     // create a string containing a URL representing the file data given in the parameter
-    const url = URL.createObjectURL(file);
+    const url = window.URL.createObjectURL(file);
     // create dinamically a link
     const a = document.createElement('a');
     // add url to href of link

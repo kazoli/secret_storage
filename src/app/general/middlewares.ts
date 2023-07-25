@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs-react';
 import tweetnacl from 'tweetnacl';
-import util from 'tweetnacl-util';
+import tweetnaclUtil from 'tweetnacl-util';
 import { tStorageInitialState } from '../storage/storageTypes';
 
 // Scroll to element
@@ -54,43 +54,43 @@ export const bcryptCompare = async (
 
 // Creating secretbox parts
 const tweetNaClSecretBoxParts = (password: string) => {
-  // Convert the password string to bytes in UTF-8 encoding
-  const passwordBytes = util.decodeUTF8(password);
-  // Hash the password to derive a symmetric encryption key
+  // convert the password string to bytes in UTF-8 encoding
+  const passwordBytes = tweetnaclUtil.decodeUTF8(password);
+  // hash the password to derive a symmetric encryption key
   const fullHash = tweetnacl.hash(passwordBytes);
-  // Get the length of full hash
+  // get the length of full hash
   const fullHashLength = fullHash.length;
-  // Get the length of password
+  // get the length of password
   const passwordLength = password.length;
-  // Get hash closure function
+  // get hash closure function
   const getHash = (length: number) => {
-    // Set initial positions
+    // set initial positions
     const positions = { start: 0, end: 0 };
-    // Starting from the lenght of key or nonce minus password position
+    // starting from the lenght of key or nonce minus password position
     positions.start = length - passwordLength;
-    // Starting from the lenght of password minus key or nonce position
+    // starting from the lenght of password minus key or nonce position
     if (positions.start < 0) {
       positions.start = passwordLength - length;
     }
-    // Check max length is not over the full hash length
+    // check max length is not over the full hash length
     if (fullHashLength - positions.start - length >= 0) {
-      // End position is under or equal the full hash length
+      // end position is under or equal the full hash length
       positions.end = positions.start + length;
     } else {
-      // End position is over the full hash length so start from the beginning
+      // end position is over the full hash length so start from the beginning
       positions.start = 0;
       positions.end = length;
     }
-    //Return subarray of full hash
+    // return subarray of full hash
     return fullHash.subarray(positions.start, positions.end);
   };
-  // Get the hash for nonce
+  // get the hash for nonce
   const nonce = getHash(tweetnacl.secretbox.nonceLength);
-  // Reverses the full hash before key generation for increasing the security
+  // reverses the full hash before key generation for increasing the security
   fullHash.reverse();
-  // Get the hash for key
+  // get the hash for key
   const key = getHash(tweetnacl.secretbox.keyLength);
-  // Return the key and nonce
+  // return the key and nonce
   return { nonce, key };
 };
 
@@ -99,14 +99,14 @@ export const tweetNaClEncryptData = (
   data: any,
   password: string,
 ): false | string => {
-  // Convert the data to bytes in UTF-8 encoding
-  const dataBytes = util.decodeUTF8(JSON.stringify(data));
-  // Get symmetric key and nonce to secretbox
+  // convert the data to bytes in UTF-8 encoding
+  const dataBytes = tweetnaclUtil.decodeUTF8(JSON.stringify(data));
+  // get symmetric key and nonce to secretbox
   const { nonce, key } = tweetNaClSecretBoxParts(password);
-  // Encrypt the data using the symmetric key and nonce
+  // encrypt the data using the symmetric key and nonce
   const encryptedBytes = tweetnacl.secretbox(dataBytes, nonce, key);
-  // Return the encrypted data in Base64 string or false if encrypting failed
-  return encryptedBytes ? util.encodeBase64(encryptedBytes) : false;
+  // return the encrypted data in Base64 string or false if encrypting failed
+  return encryptedBytes ? tweetnaclUtil.encodeBase64(encryptedBytes) : false;
 };
 
 // Decrypt data with password
@@ -114,18 +114,18 @@ export const tweetNaClDecryptData = (
   encryptedData: string,
   password: string,
 ): false | tStorageInitialState['decodedData'] => {
-  // Decode the encrypted data from Base64 to obtain the actual bytes
-  const encryptedBytes = util.decodeBase64(encryptedData);
-  // Get symmetric key and nonce to secretbox
+  // decode the encrypted data from Base64 to obtain the actual bytes
+  const encryptedBytes = tweetnaclUtil.decodeBase64(encryptedData);
+  // get symmetric key and nonce to secretbox
   const { nonce, key } = tweetNaClSecretBoxParts(password);
-  // Decrypt the data using the symmetric key and nonce
+  // decrypt the data using the symmetric key and nonce
   const decryptedBytes = tweetnacl.secretbox.open(encryptedBytes, nonce, key);
-  // If the decryption failed return false
+  // if the decryption failed return false
   if (!decryptedBytes) {
     return false;
   }
-  // Convert the decrypted bytes back to a UTF-8 string and parse it as JSON to get the original data
-  const decryptedData = util.encodeUTF8(decryptedBytes);
-  // Return parsed data
+  // convert the decrypted bytes back to a UTF-8 string
+  const decryptedData = tweetnaclUtil.encodeUTF8(decryptedBytes);
+  // return parsed original data
   return JSON.parse(decryptedData);
 };

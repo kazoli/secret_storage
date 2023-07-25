@@ -2,7 +2,7 @@
 
 Only frontend based codes, no backend or any data movement outside your browser. Vite, React and Typescript. Crypting by TweetNaCl.
 
-LIVE DEMO
+#LIVE DEMO
 
 1. https://kazoli.github.io/secret_storage
 2. Download the serverless build, unzip it, go into the unzipped folder and click twice on index.html to run: https://github.com/kazoli/secret_storage/blob/master/serverless-build.zip
@@ -34,7 +34,7 @@ LIVE DEMO
 #RUN PRODUCTION
 
 1. Use a command line, enter in the main folder and run this command: "npm run build"
-2. You may serve it with a static server by typing in command line and run: serve -s build
+2. You may serve it with a static server by typing in command line and run: "serve -s build"
 3. App will start on that URL that static server will display in the command line
 
 #BUILD A SERVERLESS PRODUCTION
