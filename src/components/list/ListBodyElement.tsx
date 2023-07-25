@@ -42,10 +42,10 @@ function ListBodyElement(props: tProps) {
 
   return (
     <div className="flex flex-wrap flex-col bg-[#fff] shadow-[0_0_0_1px_#d7d7d7] rounded-[3px]">
-      <div className="p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0]">
+      <div className="p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] break-all">
         {props.dataBlock.title}
       </div>
-      <div className="p-[10px] flex-[1_1_auto] whitespace-pre-line">
+      <div className="p-[10px] flex-[1_1_auto] whitespace-pre-line break-all">
         {props.dataBlock.data}
       </div>
       <div className="flex flex-wrap justify-between gap-[15px] p-[10px] bg-[#f7f7f7] shadow-[inset_0_0_15px_0_#d0d0d0] rounded-[0_0_3px_3px]">
