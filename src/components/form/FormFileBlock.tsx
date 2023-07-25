@@ -38,6 +38,7 @@ function FormFileBlock(props: tProps) {
   };
 
   const setDefault = () => {
+    (document.getElementById('file-input') as HTMLInputElement).value = '';
     setFileText(props.defaultText);
     props.contentAction('', '');
   };
