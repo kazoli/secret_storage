@@ -79,6 +79,37 @@ export const storageDataValidate = async (
   return errors;
 };
 
+// Filter data in block list
+export const storageFilterList = (
+  keywords: tStorageInitialState['keywords'],
+  searchType: tStorageInitialState['searchType'],
+  decodedData: tStorageInitialState['decodedData'],
+) => {
+  if (/\S/.test(keywords)) {
+    const splittedKeywords = keywords.split(' ');
+    // Filter the array based on the specified filterBy value
+    const results = decodedData.filter((dataBlock) => {
+      // Check if the title or data contains any of the search keywords
+      const matchedKeywords = splittedKeywords.filter((keyword) => {
+        // case insensitive search
+        const regex = new RegExp(keyword, 'i');
+        if (searchType === 'all') {
+          // match all types of data
+          return regex.test(dataBlock.title) || regex.test(dataBlock.data);
+        } else {
+          // match only the selected type of data
+          return regex.test(dataBlock[searchType]);
+        }
+      });
+      // return true if both words can be found
+      return matchedKeywords.length === splittedKeywords.length;
+    });
+    return results;
+  } else {
+    return decodedData;
+  }
+};
+
 // Repostioning a storage data block
 export const storageRepositionDataBlock = (
   decodedData: tStorageInitialState['decodedData'],

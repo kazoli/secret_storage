@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from 'react';
 import { tDropDownOption } from '../../app/general/types';
 
 type tProps = {
@@ -10,11 +11,38 @@ type tProps = {
 };
 
 function DropDownMenu(props: tProps) {
+  const [showDropDown, setShowDropDown] = useState(false);
+  const dropDownRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    // close dropdown when clicking anywhere outside trigger button
+    const clickOutside = (event: MouseEvent) => {
+      if (
+        dropDownRef.current &&
+        !dropDownRef.current.contains(event.target as Node)
+      ) {
+        setShowDropDown(false);
+      }
+    };
+    // add event listener when the component mounts
+    document.addEventListener('click', clickOutside);
+    // clean up the event listener when the component unmounts
+    return () => document.removeEventListener('click', clickOutside);
+  }, []);
+
   return (
     <div className={props.classContainer}>
-      <button className="block w-[100%] peer">{props.selector}</button>
+      <button
+        ref={dropDownRef}
+        className="block w-[100%]"
+        onClick={() => setShowDropDown(!showDropDown)}
+      >
+        {props.selector}
+      </button>
       <ul
-        className={`${props.classList} peer-focus:block active:block hidden absolute`}
+        className={`${showDropDown ? '' : 'hidden'} absolute ${
+          props.classList
+        }`}
       >
         {props.options.map((element) => (
           <li

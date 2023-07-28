@@ -71,28 +71,30 @@ function ListBodyElement(props: tProps) {
             }
           />
         </div>
-        <div className="flex flex-wrap gap-[15px]">
-          <AiOutlineMinus
-            className="icon-button hover"
-            title="Step backward"
-            onClick={() =>
-              storageDispatch({
-                type: tStorageActionTypes.setPosition,
-                payload: { direction: 'backward', id: props.dataBlock.id },
-              })
-            }
-          />
-          <AiOutlinePlus
-            className="icon-button hover"
-            title="Step forward"
-            onClick={() =>
-              storageDispatch({
-                type: tStorageActionTypes.setPosition,
-                payload: { direction: 'forward', id: props.dataBlock.id },
-              })
-            }
-          />
-        </div>
+        {!storageState.keywords && (
+          <div className="flex flex-wrap gap-[15px]">
+            <AiOutlineMinus
+              className="icon-button hover"
+              title="Step backward"
+              onClick={() =>
+                storageDispatch({
+                  type: tStorageActionTypes.setPosition,
+                  payload: { direction: 'backward', id: props.dataBlock.id },
+                })
+              }
+            />
+            <AiOutlinePlus
+              className="icon-button hover"
+              title="Step forward"
+              onClick={() =>
+                storageDispatch({
+                  type: tStorageActionTypes.setPosition,
+                  payload: { direction: 'forward', id: props.dataBlock.id },
+                })
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );

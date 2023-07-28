@@ -8,14 +8,14 @@ function ListSearch() {
   const [keywords, setKeywords] = useState('');
 
   useEffect(() => {
-    // delay 750 ms during typing
+    // delay 500 ms during typing
     const timerId = setTimeout(
       () =>
         storageDispatch({
           type: tStorageActionTypes.setKeywords,
-          payload: keywords,
+          payload: keywords.trim(), // remove whitespaces
         }),
-      keywords.length ? 750 : 0,
+      keywords.length ? 500 : 0,
     );
     return () => clearTimeout(timerId);
   }, [keywords]);

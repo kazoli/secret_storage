@@ -20,7 +20,7 @@ Only frontend based codes, no backend or any data movement outside your browser.
 9. Data can be searched by keywords in title, data or all.
 10. List and grid layout available.
 11. Blocks can be added, modified and deleted with the valid password.
-12. Blocks can be moved or reordered inside list.
+12. Blocks can be moved or reordered inside list if no keywords were entered in search field.
 
 #BEFORE RUN ANY CODE
 
@@ -28,7 +28,7 @@ Only frontend based codes, no backend or any data movement outside your browser.
 
 #RUN DEVELOPMENT
 
-1. Use a command line, enter in the main folder and start the website: "npm run dev"
+1. Use a command line, enter in the main folder and run this command: "npm run dev"
 2. Open in browser: http://localhost:3000/
 
 #RUN PRODUCTION
