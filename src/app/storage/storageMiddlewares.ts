@@ -1,4 +1,4 @@
-import { tCustomConfirm } from '../general/types';
+import { tCustomConfirm, tFileContent } from '../general/types';
 import {
   tStorageActionTypes,
   tStorageActions,
@@ -77,6 +77,50 @@ export const storageDataValidate = async (
     errors.password = storageSettings.passwordCheckError;
   }
   return errors;
+};
+
+// Parse content of opened file
+export const storageParseFileContent = (
+  fileName: string,
+  fileContent: tFileContent,
+  storageDispatch: React.Dispatch<tStorageActions>,
+  encodedData: tStorageInitialState['encodedData'],
+) => {
+  // reset previous content
+  if (encodedData) {
+    storageDispatch({
+      type: tStorageActionTypes.initializeData,
+      payload: {
+        fileName: storageSettings.defaultFileName,
+        encodedData: '',
+      },
+    });
+  }
+  let fileError = '';
+  if (typeof fileContent === 'string') {
+    if (fileContent) {
+      try {
+        const content = JSON.parse(fileContent);
+        if (content['encodedData'] !== undefined) {
+          storageDispatch({
+            type: tStorageActionTypes.initializeData,
+            payload: {
+              fileName: fileName,
+              encodedData: content.encodedData,
+            },
+          });
+        } else {
+          fileError = 'Wrong structure of the file content';
+        }
+      } catch (error) {
+        console.error(error);
+        fileError = 'Selected file content cannot be parsed';
+      }
+    }
+  } else {
+    fileError = 'File has wrong type or no content';
+  }
+  return fileError;
 };
 
 // Filter data in block list

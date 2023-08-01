@@ -11,7 +11,10 @@ import {
   bcryptHash,
   tweetNaClDecryptData,
 } from '../../app/general/middlewares';
-import { storageLoginValidate } from '../../app/storage/storageMiddlewares';
+import {
+  storageLoginValidate,
+  storageParseFileContent,
+} from '../../app/storage/storageMiddlewares';
 import DefaultLayout from '../layout/DefaultLayout';
 import FormFileBlock from '../form/FormFileBlock';
 import FormPasswordBlock from '../form/FormPasswordBlock';
@@ -39,63 +42,21 @@ function LogIn() {
     file: '',
   });
 
-  // Parse content of opened file
+  // Get the storage file content to be parsed
   const getStorageFileContent = (
     fileName: string,
     fileContent: tFileContent,
   ) => {
-    // reset previous content
-    if (storageState.encodedData) {
-      storageDispatch({
-        type: tStorageActionTypes.initializeData,
-        payload: {
-          fileName: storageSettings.defaultFileName,
-          encodedData: '',
-        },
-      });
-    }
-    if (typeof fileContent === 'string') {
-      if (fileContent) {
-        try {
-          const content = JSON.parse(fileContent);
-          if (content['encodedData']) {
-            setFormErrors({
-              ...formErrors,
-              file: '',
-            });
-            storageDispatch({
-              type: tStorageActionTypes.initializeData,
-              payload: {
-                fileName: fileName,
-                encodedData: content.encodedData,
-              },
-            });
-          } else {
-            setFormErrors({
-              ...formErrors,
-              file: 'Wrong structure of the file content',
-            });
-          }
-        } catch (error) {
-          console.error(error);
-          setFormErrors({
-            ...formErrors,
-            file: 'Selected file content cannot be parsed',
-          });
-        }
-      } else {
-        // empty string means new file
-        setFormErrors({
-          ...formErrors,
-          file: '',
-        });
-      }
-    } else {
-      setFormErrors({
-        ...formErrors,
-        file: 'File has wrong type or no content',
-      });
-    }
+    const error = storageParseFileContent(
+      fileName,
+      fileContent,
+      storageDispatch,
+      storageState.encodedData,
+    );
+    setFormErrors({
+      ...formErrors,
+      file: error,
+    });
   };
 
   // Submit password parse and log in
