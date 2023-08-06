@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storageFilterList } from '../../app/storage/storageMiddlewares';
 import { useAppContext } from '../core/Context';
 import DefaultLayout from '../layout/DefaultLayout';
 import CustomConfirm from '../general/CustomConfirm';
@@ -8,7 +7,6 @@ import ListDataBlockEditor from '../list/ListDataBlockEditor';
 import ListExportButton from '../list/ListExportButton';
 import ListHeader from '../list/ListHeader';
 import ListBody from '../list/ListBody';
-import ListBodyEmpty from '../list/ListBodyEmpty';
 
 function List() {
   useEffect(() => {
@@ -24,22 +22,6 @@ function List() {
     }
   }, [storageState.loggedIn]);
 
-  const [filteredData, setFilteredData] = useState(storageState.decodedData);
-
-  useEffect(() => {
-    setFilteredData(
-      storageFilterList(
-        storageState.keywords,
-        storageState.searchType,
-        storageState.decodedData,
-      ),
-    );
-  }, [
-    storageState.keywords,
-    storageState.searchType,
-    storageState.decodedData,
-  ]);
-
   return (
     <DefaultLayout loading={storageState.status === 'loading'}>
       <>
@@ -51,11 +33,7 @@ function List() {
           <ListDataBlockEditor listEditorData={storageState.dataBlockEditor} />
         )}
         <ListHeader />
-        {filteredData.length ? (
-          <ListBody data={filteredData} view={storageState.view} />
-        ) : (
-          <ListBodyEmpty />
-        )}
+        <ListBody />
       </>
     </DefaultLayout>
   );

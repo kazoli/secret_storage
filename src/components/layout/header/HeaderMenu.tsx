@@ -19,14 +19,11 @@ function HeaderMenu(props: tProps) {
 
   const options = storageState.loggedIn
     ? [
+        { key: 'exportAvailable', value: 'Export data' },
         { key: 'changePassword', value: 'Change password' },
         { key: 'logOut', value: 'Log out' },
       ]
     : [{ key: 'logIn', value: 'Log in' }];
-
-  if (storageState.exportAvailable) {
-    options.unshift({ key: 'exportAvailable', value: 'Export data' });
-  }
 
   const logOutConfirm: tCustomConfirm = {
     text: 'You have changed data in the list and it has not been exported. Are you sure to continue to log out without exporting your data?',
