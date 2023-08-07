@@ -1,8 +1,9 @@
-import { tActionMap, tCustomConfirm } from '../general/types';
+import { tActionMap, tCustomConfirm, tDropDownOption } from '../general/types';
 
 // Type of storage data block
 export type tStorageDataBlock = {
   id: string;
+  category: string;
   title: string;
   data: string;
 };
@@ -13,6 +14,8 @@ export type tStorageInitialState = {
   loggedIn: boolean;
   encodedPassword: string;
   encodedData: string;
+  categories: tDropDownOption[];
+  selectedCategory: string;
   keywords: string;
   searchType: 'all' | 'title' | 'data';
   view: 'grid' | 'list';
@@ -32,6 +35,7 @@ export enum tStorageActionTypes {
   logOut = 'logOut',
   changePassword = 'changePassword',
   setKeywords = 'setKeywords',
+  setSelectedCategory = 'setSelectedCategory',
   setSearchType = 'setSearchType',
   setView = 'setView',
   setPosition = 'setPosition',
@@ -52,6 +56,7 @@ export type tStoragePayload = {
   [tStorageActionTypes.setData]: {
     encodedPassword: tStorageInitialState['encodedPassword'];
     encodedData: tStorageInitialState['encodedData'];
+    categories: tStorageInitialState['categories'];
     decodedData: tStorageInitialState['decodedData'];
   };
   [tStorageActionTypes.logIn]: {
@@ -60,6 +65,7 @@ export type tStoragePayload = {
   [tStorageActionTypes.logOut]: undefined;
   [tStorageActionTypes.changePassword]: tStorageInitialState['encodedPassword'];
   [tStorageActionTypes.setKeywords]: tStorageInitialState['keywords'];
+  [tStorageActionTypes.setSelectedCategory]: tStorageInitialState['selectedCategory'];
   [tStorageActionTypes.setSearchType]: tStorageInitialState['searchType'];
   [tStorageActionTypes.setView]: tStorageInitialState['view'];
   [tStorageActionTypes.setPosition]: {

@@ -20,12 +20,14 @@ function ListDataBlockEditor(props: tProps) {
   const { storageState, storageDispatch } = useAppContext();
   const [formData, setFormData] = useState({
     id: '',
+    category: '',
     title: '',
     data: '',
     password: '',
   });
   const [formErrors, setFormErrors] = useState({
     title: '',
+    category: '',
     data: '',
     password: '',
   });
@@ -35,6 +37,7 @@ function ListDataBlockEditor(props: tProps) {
       setFormData({
         ...formData,
         id: props.listEditorData.id,
+        category: props.listEditorData.category,
         title: props.listEditorData.title,
         data: props.listEditorData.data,
       });
@@ -48,15 +51,17 @@ function ListDataBlockEditor(props: tProps) {
     });
     const processed = {
       title: formData.title.trim(),
+      category: formData.category.trim(),
       data: formData.data.trim(),
     };
     storageDataValidate(
       processed.title,
+      processed.category,
       processed.data,
       formData.password,
       storageState.encodedPassword,
     ).then((errors) => {
-      if (errors.title || errors.data || errors.password) {
+      if (errors.title || errors.category || errors.data || errors.password) {
         setFormErrors(errors);
         storageDispatch({
           type: tStorageActionTypes.setStatus,
@@ -75,6 +80,7 @@ function ListDataBlockEditor(props: tProps) {
           type: tStorageActionTypes.setDataBlock,
           payload: {
             id: formData.id,
+            category: formData.category,
             title: processed.title,
             data: processed.data,
           },
@@ -107,6 +113,15 @@ function ListDataBlockEditor(props: tProps) {
         value={formData.title}
         action={(value) => setFormData({ ...formData, title: value })}
         error={formErrors.title}
+      />
+      <FormInputBlock
+        type="text"
+        label="Category"
+        id="category"
+        placeholder={`${storageSettings.categoryLength.min} - ${storageSettings.categoryLength.max} characters length`}
+        value={formData.category}
+        action={(value) => setFormData({ ...formData, category: value })}
+        error={formErrors.category}
       />
       <FormTextAreaBlock
         label="Data"

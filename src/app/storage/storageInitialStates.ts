@@ -10,6 +10,7 @@ export const storageSettings = {
   passwordCheckError: 'Password is not correct',
   passwordLength: { min: 8, max: 30 },
   titleLength: { min: 3, max: 200 },
+  categoryLength: { min: 1, max: 20 },
   dataLength: { min: 5, max: 10000 },
 };
 
@@ -26,6 +27,11 @@ export const storageInitialState: tStorageInitialState = {
   loggedIn: false,
   encodedPassword: '',
   encodedData: '',
+  categories: [
+    { key: 'default', value: 'All categories' },
+    { key: '', value: 'Uncategorized' },
+  ],
+  selectedCategory: 'default',
   keywords: '',
   searchType: 'all',
   view: getLocalStorage(storageSettings.localStorage.viewKey) ?? 'grid',

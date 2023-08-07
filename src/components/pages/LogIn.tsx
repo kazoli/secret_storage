@@ -1,19 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { tFileContent } from '../../app/general/types';
-import {
-  tStorageActionTypes,
-  tStoragePayload,
-} from '../../app/storage/storageTypes';
 import { storageSettings } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import {
-  bcryptHash,
-  tweetNaClDecryptData,
-} from '../../app/general/middlewares';
-import {
-  storageLoginValidate,
   storageParseFileContent,
+  storageProcessFile,
 } from '../../app/storage/storageMiddlewares';
 import DefaultLayout from '../layout/DefaultLayout';
 import FormFileBlock from '../form/FormFileBlock';
@@ -63,51 +55,13 @@ function LogIn() {
   const onSubmit = async (event: void | React.FormEvent<HTMLFormElement>) => {
     // prevent default submit if submit by enter on input
     event && event.preventDefault();
-    // set loading shows
-    storageDispatch({
-      type: tStorageActionTypes.setStatus,
-      payload: 'loading',
-    });
-    // data to be dispatched
-    const data: tStoragePayload[tStorageActionTypes.setData] = {
-      encodedPassword: '',
-      encodedData: '',
-      decodedData: [],
-    };
-    let error = '';
-    // there was stored data previously
-    if (storageState.encodedData) {
-      // trying to decode by password
-      const result = tweetNaClDecryptData(
-        storageState.encodedData,
-        formData.password,
-      );
-      // resulting the decoded data or an error message if could not decode
-      if (result) {
-        data.decodedData = result;
-      } else {
-        error = storageSettings.passwordCheckError;
-      }
-    } else {
-      // no stored data previously so validate a new password
-      error = await storageLoginValidate(formData.password);
-    }
-    if (error) {
-      // password error
-      storageDispatch({
-        type: tStorageActionTypes.setStatus,
-        payload: 'idle',
-      });
-      setFormErrors({ ...formErrors, password: error });
-    } else {
-      // hashing entered password for secure using
-      data.encodedPassword = await bcryptHash(formData.password);
-      // dispatching data
-      storageDispatch({
-        type: tStorageActionTypes.setData,
-        payload: data,
-      });
-    }
+    // process file and return error message
+    const error = await storageProcessFile(
+      storageState.encodedData,
+      formData.password,
+      storageDispatch,
+    );
+    setFormErrors({ ...formErrors, password: error });
   };
 
   const buttons = [{ text: 'Log in', action: onSubmit }];

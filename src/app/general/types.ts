@@ -10,7 +10,7 @@ export type tActionMap<T extends { [key: string]: any }> = {
       };
 };
 
-// General type of dropdown options
+// General type of dropdown option
 export type tDropDownOption = {
   key: string | number;
   value: string | JSX.Element;

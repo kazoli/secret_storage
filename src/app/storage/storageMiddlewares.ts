@@ -6,8 +6,14 @@ import {
   tStoragePayload,
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
-import { bcryptCompare, tweetNaClEncryptData } from '../general/middlewares';
+import {
+  bcryptCompare,
+  bcryptHash,
+  tweetNaClDecryptData,
+  tweetNaClEncryptData,
+} from '../general/middlewares';
 import { validateInput, validatePassword } from '../general/validations';
+import { v4 as uuidV4 } from 'uuid';
 import { toast } from 'react-toastify';
 
 // Validate login form data
@@ -51,12 +57,14 @@ export const storageChangePasswordValidate = async (
 // Validate storage block form data
 export const storageDataValidate = async (
   title: string,
+  category: string,
   data: string,
   password: string,
   encodedPassword: string,
 ) => {
   const errors = {
     title: '',
+    category: '',
     data: '',
     password: '',
   };
@@ -65,6 +73,12 @@ export const storageDataValidate = async (
     title,
     storageSettings.titleLength.min,
     storageSettings.titleLength.max,
+  );
+  errors.category = validateInput(
+    'Category',
+    category,
+    storageSettings.categoryLength.min,
+    storageSettings.categoryLength.max,
   );
   errors.data = validateInput(
     'Data',
@@ -121,6 +135,74 @@ export const storageParseFileContent = (
     fileError = 'File has wrong type or no content';
   }
   return fileError;
+};
+
+// Decoding storage file content
+export const storageProcessFile = async (
+  encodedData: tStorageInitialState['encodedData'],
+  password: string,
+  storageDispatch: React.Dispatch<tStorageActions>,
+) => {
+  // set loading shows
+  storageDispatch({
+    type: tStorageActionTypes.setStatus,
+    payload: 'loading',
+  });
+  // error message
+  let error = '';
+  // data to be dispatched
+  const processedData: tStoragePayload[tStorageActionTypes.setData] = {
+    encodedPassword: '',
+    encodedData: '',
+    categories: storageInitialState.categories,
+    decodedData: [],
+  };
+  // there was stored data previously
+  if (encodedData) {
+    // trying to decode by password
+    const result = tweetNaClDecryptData(encodedData, password);
+    // resulting the decoded data or an error message if it could not decode
+    if (result) {
+      // looping through all resulted data
+      result.forEach((data) => {
+        // pushing resulted data into decoded data array with the managing of any missing data
+        processedData.decodedData.push({
+          id: data.id ?? uuidV4(),
+          category: data.category ?? '',
+          title: data.title ?? 'Missing title',
+          data: data.data ?? '',
+        });
+        // pushing category if not empty
+        if (data.category) {
+          processedData.categories.push({
+            key: data.category,
+            value: data.category,
+          });
+        }
+      });
+    } else {
+      error = storageSettings.passwordCheckError;
+    }
+  } else {
+    // no stored data previously so validate a new password
+    error = await storageLoginValidate(password);
+  }
+  if (error) {
+    // set status to idle
+    storageDispatch({
+      type: tStorageActionTypes.setStatus,
+      payload: 'idle',
+    });
+  } else {
+    // hashing entered password for secure using
+    processedData.encodedPassword = await bcryptHash(password);
+    // dispatching data
+    storageDispatch({
+      type: tStorageActionTypes.setData,
+      payload: processedData,
+    });
+  }
+  return error;
 };
 
 // Filter data in block list

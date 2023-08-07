@@ -42,8 +42,11 @@ function ListBodyElement(props: tProps) {
 
   return (
     <div className="flex flex-wrap flex-col bg-[#fff] shadow-[0_0_0_1px_#d7d7d7] rounded-[3px]">
-      <div className="p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] w-full">
-        {props.dataBlock.title}
+      <div className="flex flex-wrap justify-between p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] w-full">
+        <span>{props.dataBlock.title}</span>
+        <span title="Category">
+          {props.dataBlock.category && `#${props.dataBlock.category}`}
+        </span>
       </div>
       <div className="p-[10px] flex-[1_1_auto] whitespace-pre-line w-full">
         {props.dataBlock.data}

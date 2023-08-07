@@ -38,6 +38,7 @@ export const storageReducer = (
         status: storageInitialState.status,
         encodedPassword: action.payload.encodedPassword,
         encodedData: action.payload.encodedData,
+        categories: action.payload.categories,
         decodedData: action.payload.decodedData,
         loggedIn: !action.payload.encodedData,
       };
@@ -81,6 +82,14 @@ export const storageReducer = (
       state = {
         ...state,
         keywords: action.payload,
+      };
+      return state;
+
+    // set category
+    case tStorageActionTypes.setSelectedCategory:
+      state = {
+        ...state,
+        selectedCategory: action.payload,
       };
       return state;
 
