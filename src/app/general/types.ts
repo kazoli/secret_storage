@@ -10,10 +10,21 @@ export type tActionMap<T extends { [key: string]: any }> = {
       };
 };
 
-// General type of dropdown option
+// General type of string valued object
+export type tStringObject = {
+  [key: string | number]: string;
+};
+
+// General type of drop-down option
 export type tDropDownOption = {
   key: string | number;
   value: string | JSX.Element;
+};
+
+// General type of select-like drop-down data
+export type tSelect = {
+  selected: tDropDownOption['value'];
+  options: tDropDownOption[];
 };
 
 // General type to returning content of file read

@@ -1,7 +1,7 @@
 import { tStorageActionTypes } from '../../app/storage/storageTypes';
 import { useAppContext } from '../core/Context';
 
-function ListAddNew() {
+function ListAddNewButton() {
   const { storageDispatch } = useAppContext();
 
   return (
@@ -19,4 +19,4 @@ function ListAddNew() {
   );
 }
 
-export default ListAddNew;
+export default ListAddNewButton;

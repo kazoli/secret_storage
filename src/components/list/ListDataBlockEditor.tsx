@@ -5,7 +5,7 @@ import {
 } from '../../app/storage/storageTypes';
 import { storageSettings } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
-import { storageDataValidate } from '../../app/storage/storageMiddlewares';
+import { storageProcessDataBlock } from '../../app/storage/storageMiddlewares';
 import PopUp from '../general/PopUp';
 import FormInputBlock from '../form/FormInputBlock';
 import FormTextAreaBlock from '../form/FormTextAreaBlock';
@@ -44,54 +44,16 @@ function ListDataBlockEditor(props: tProps) {
     }
   }, [props.listEditorData]);
 
-  const onSubmit = () => {
-    storageDispatch({
-      type: tStorageActionTypes.setStatus,
-      payload: 'loading',
-    });
-    const processed = {
-      title: formData.title.trim(),
-      category: formData.category.trim(),
-      data: formData.data.trim(),
-    };
-    storageDataValidate(
-      processed.title,
-      processed.category,
-      processed.data,
-      formData.password,
-      storageState.encodedPassword,
-    ).then((errors) => {
-      if (errors.title || errors.category || errors.data || errors.password) {
-        setFormErrors(errors);
-        storageDispatch({
-          type: tStorageActionTypes.setStatus,
-          payload: 'idle',
-        });
-      } else {
-        // if new block is added, emptying keywords to avoid new element does not appear that caused by list filtering
-        if (!formData.id) {
-          const listClearKeywordsButton = document.getElementById(
-            'list-clear-keywords-button',
-          );
-          listClearKeywordsButton && listClearKeywordsButton.click();
-        }
-        // dispatch newly created data
-        storageDispatch({
-          type: tStorageActionTypes.setDataBlock,
-          payload: {
-            id: formData.id,
-            category: formData.category,
-            title: processed.title,
-            data: processed.data,
-          },
-        });
-      }
-    });
-  };
   const buttons = [
     {
       text: 'Save data',
-      action: onSubmit,
+      action: () => {
+        storageProcessDataBlock(
+          formData,
+          storageState.encodedPassword,
+          storageDispatch,
+        ).then((errors) => setFormErrors(errors));
+      },
     },
     {
       text: 'Cancel',
@@ -114,15 +76,6 @@ function ListDataBlockEditor(props: tProps) {
         action={(value) => setFormData({ ...formData, title: value })}
         error={formErrors.title}
       />
-      <FormInputBlock
-        type="text"
-        label="Category"
-        id="category"
-        placeholder={`${storageSettings.categoryLength.min} - ${storageSettings.categoryLength.max} characters length`}
-        value={formData.category}
-        action={(value) => setFormData({ ...formData, category: value })}
-        error={formErrors.category}
-      />
       <FormTextAreaBlock
         label="Data"
         id="title"
@@ -132,6 +85,15 @@ function ListDataBlockEditor(props: tProps) {
         value={formData.data}
         action={(value) => setFormData({ ...formData, data: value })}
         error={formErrors.data}
+      />
+      <FormInputBlock
+        type="text"
+        label="Category"
+        id="category"
+        placeholder={`Empty or up to ${storageSettings.categoryLength.max} characters length`}
+        value={formData.category}
+        action={(value) => setFormData({ ...formData, category: value })}
+        error={formErrors.category}
       />
       <FormPasswordBlock
         label="Password"

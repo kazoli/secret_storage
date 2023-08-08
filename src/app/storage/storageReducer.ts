@@ -5,7 +5,10 @@ import {
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import { setLocalStorage } from '../general/middlewares';
-import { storageRepositionDataBlock } from './storageMiddlewares';
+import {
+  storageReorderCategories,
+  storageRepositionDataBlock,
+} from './storageMiddlewares';
 import { v4 as uuidV4 } from 'uuid';
 
 // Storage reducer
@@ -137,6 +140,10 @@ export const storageReducer = (
         status: storageInitialState.status,
         dataBlockEditor: storageInitialState.dataBlockEditor,
         exportAvailable: true,
+        categories: storageReorderCategories(
+          [...state.categories],
+          action.payload.category,
+        ),
         decodedData: action.payload.id
           ? state.decodedData.map((data) =>
               data.id === action.payload.id ? action.payload : data,

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs-react';
 import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
+import { tStringObject } from './types';
 import { tStorageInitialState } from '../storage/storageTypes';
 
 // Scroll to element
@@ -128,4 +129,26 @@ export const tweetNaClDecryptData = (
   const decryptedData = tweetnaclUtil.encodeUTF8(decryptedBytes);
   // return parsed original data
   return JSON.parse(decryptedData);
+};
+
+// General alphabetic reorder
+export const alphabetReorder = <T extends tStringObject>(
+  array: T[],
+  key: keyof T,
+  ascend = true,
+) => {
+  // creating a deep copied array to avoid mutating the original array
+  const sortedArray = [...array];
+  // sorting function
+  const sorting = (a: T, b: T) =>
+    a[key].localeCompare(b[key], undefined, { sensitivity: 'accent' });
+  // reverse the array elements if descending order is required
+  return ascend
+    ? sortedArray.sort(sorting)
+    : sortedArray.sort((a, b) => sorting(b, a));
+};
+
+// Convert a string first letter upper case and all others to lower case
+export const upperCaseFirst = (text: string) => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };

@@ -1,4 +1,4 @@
-import { tCustomConfirm, tFileContent } from '../general/types';
+import { tCustomConfirm, tFileContent, tStringObject } from '../general/types';
 import {
   tStorageActionTypes,
   tStorageActions,
@@ -7,10 +7,12 @@ import {
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import {
+  alphabetReorder,
   bcryptCompare,
   bcryptHash,
   tweetNaClDecryptData,
   tweetNaClEncryptData,
+  upperCaseFirst,
 } from '../general/middlewares';
 import { validateInput, validatePassword } from '../general/validations';
 import { v4 as uuidV4 } from 'uuid';
@@ -163,6 +165,8 @@ export const storageProcessFile = async (
     const result = tweetNaClDecryptData(encodedData, password);
     // resulting the decoded data or an error message if it could not decode
     if (result) {
+      // category map for the most efficient way to get unique categories
+      let categoryMap: { [key: string]: true } = {};
       // looping through all resulted data
       result.forEach((data) => {
         // pushing resulted data into decoded data array with the managing of any missing data
@@ -174,12 +178,27 @@ export const storageProcessFile = async (
         });
         // pushing category if not empty
         if (data.category) {
-          processedData.categories.push({
-            key: data.category,
-            value: data.category,
-          });
+          // adding to category map if it does not even contain
+          !categoryMap[data.category] && (categoryMap[data.category] = true);
         }
       });
+      // convert category map keys into the form of drop down
+      processedData.categories = Object.keys(categoryMap).map((key) => ({
+        key,
+        value: key,
+      }));
+      // unsetting categoryMap
+      categoryMap = {};
+      // sorting categories in ascending order
+      processedData.categories = alphabetReorder(
+        processedData.categories as tStringObject[],
+        'key',
+      ) as tStorageInitialState['categories'];
+      // adding initial values to the start of sorted array
+      processedData.categories = [
+        ...storageInitialState.categories,
+        ...processedData.categories,
+      ];
     } else {
       error = storageSettings.passwordCheckError;
     }
@@ -203,6 +222,84 @@ export const storageProcessFile = async (
     });
   }
   return error;
+};
+
+// Processing data block
+export const storageProcessDataBlock = async (
+  formData: {
+    id: string;
+    category: string;
+    title: string;
+    data: string;
+    password: string;
+  },
+  encodedPassword: tStorageInitialState['encodedPassword'],
+  storageDispatch: React.Dispatch<tStorageActions>,
+) => {
+  storageDispatch({
+    type: tStorageActionTypes.setStatus,
+    payload: 'loading',
+  });
+  const processed = {
+    title: formData.title.trim(),
+    category: formData.category.trim(),
+    data: formData.data.trim(),
+  };
+  const errors = await storageDataValidate(
+    processed.title,
+    processed.category,
+    processed.data,
+    formData.password,
+    encodedPassword,
+  );
+  if (errors.title || errors.category || errors.data || errors.password) {
+    storageDispatch({
+      type: tStorageActionTypes.setStatus,
+      payload: 'idle',
+    });
+  } else {
+    // if new block is added, emptying keywords to avoid new element does not appear that caused by list filtering
+    if (!formData.id) {
+      const listClearKeywordsButton = document.getElementById(
+        'list-clear-keywords-button',
+      );
+      listClearKeywordsButton && listClearKeywordsButton.click();
+    }
+    // dispatch newly created data
+    storageDispatch({
+      type: tStorageActionTypes.setDataBlock,
+      payload: {
+        id: formData.id,
+        category: upperCaseFirst(processed.category),
+        title: processed.title,
+        data: processed.data,
+      },
+    });
+  }
+  return errors;
+};
+
+// Reorder storager categories
+export const storageReorderCategories = (
+  newCategories: tStorageInitialState['categories'],
+  newCategory: string,
+) => {
+  if (
+    newCategory &&
+    !newCategories.find((category) => category.key === newCategory)
+  ) {
+    // adding new category to the categories start
+    newCategories.unshift({
+      key: newCategory,
+      value: newCategory,
+    });
+    // sorting categories in ascending order
+    newCategories = alphabetReorder(
+      newCategories as tStringObject[],
+      'key',
+    ) as tStorageInitialState['categories'];
+  }
+  return newCategories;
 };
 
 // Filter data in block list

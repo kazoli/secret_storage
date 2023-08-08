@@ -4,7 +4,7 @@ import {
 } from '../../app/storage/storageTypes';
 import { storageSearchTypes } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
-import ListAddNew from './ListAddNew';
+import ListAddNewButton from './ListAddNewButton';
 import ListSearch from './ListSearch';
 import ListSelect from './ListSelect';
 import ListView from './ListView';
@@ -16,7 +16,7 @@ function ListHeader() {
     <section className="flex flex-wrap gap-[10px]">
       <ListSearch />
       <div className="flex flex-wrap-reverse gap-[10px] flex-[1_1_auto] justify-between">
-        <ListAddNew />
+        <ListAddNewButton />
         <div className="flex flex-wrap gap-[10px]">
           <ListSelect
             selected={storageState.searchType}
