@@ -36,10 +36,10 @@ function ListDataBlockEditor(props: tProps) {
     if (typeof props.listEditorData === 'object') {
       setFormData({
         ...formData,
-        id: props.listEditorData.id,
-        category: props.listEditorData.category,
-        title: props.listEditorData.title,
-        data: props.listEditorData.data,
+        id: props.listEditorData.id ?? '',
+        category: props.listEditorData.category ?? '',
+        title: props.listEditorData.title ?? '',
+        data: props.listEditorData.data ?? '',
       });
     }
   }, [props.listEditorData]);

@@ -13,12 +13,14 @@ function ListBody() {
       storageFilterList(
         storageState.keywords,
         storageState.searchType,
+        storageState.selectedCategory,
         storageState.decodedData,
       ),
     );
   }, [
     storageState.keywords,
     storageState.searchType,
+    storageState.selectedCategory,
     storageState.decodedData,
   ]);
 

@@ -15,7 +15,6 @@ import {
   upperCaseFirst,
 } from '../general/middlewares';
 import { validateInput, validatePassword } from '../general/validations';
-import { v4 as uuidV4 } from 'uuid';
 import { toast } from 'react-toastify';
 
 // Validate login form data
@@ -165,40 +164,13 @@ export const storageProcessFile = async (
     const result = tweetNaClDecryptData(encodedData, password);
     // resulting the decoded data or an error message if it could not decode
     if (result) {
-      // category map for the most efficient way to get unique categories
-      let categoryMap: { [key: string]: true } = {};
-      // looping through all resulted data
-      result.forEach((data) => {
-        // pushing resulted data into decoded data array with the managing of any missing data
-        processedData.decodedData.push({
-          id: data.id ?? uuidV4(),
-          category: data.category ?? '',
-          title: data.title ?? 'Missing title',
-          data: data.data ?? '',
-        });
-        // pushing category if not empty
-        if (data.category) {
-          // adding to category map if it does not even contain
-          !categoryMap[data.category] && (categoryMap[data.category] = true);
-        }
-      });
-      // convert category map keys into the form of drop down
-      processedData.categories = Object.keys(categoryMap).map((key) => ({
-        key,
-        value: key,
-      }));
-      // unsetting categoryMap
-      categoryMap = {};
-      // sorting categories in ascending order
-      processedData.categories = alphabetReorder(
-        processedData.categories as tStringObject[],
-        'key',
-      ) as tStorageInitialState['categories'];
-      // adding initial values to the start of sorted array
-      processedData.categories = [
-        ...storageInitialState.categories,
-        ...processedData.categories,
-      ];
+      // get decoded data from results
+      processedData.decodedData = result;
+      // get categories from decoded data
+      processedData.categories = storageGetCategories(
+        result,
+        storageInitialState.selectedCategory,
+      ).categories;
     } else {
       error = storageSettings.passwordCheckError;
     }
@@ -222,6 +194,49 @@ export const storageProcessFile = async (
     });
   }
   return error;
+};
+
+// Get categories from data list
+export const storageGetCategories = (
+  decodedData: tStorageInitialState['decodedData'],
+  selectedCategory: tStorageInitialState['selectedCategory'],
+) => {
+  // category map for the most efficient way to get unique categories
+  let categoryMap: { [key: string]: true } = {};
+  // looping through all resulted data
+  decodedData.forEach((data) => {
+    // pushing category if not empty
+    if (data.category) {
+      // adding to category map if it does not even contain
+      !categoryMap[data.category] && (categoryMap[data.category] = true);
+    }
+  });
+  const categoryKeys = Object.keys(categoryMap);
+  let newCategories: tStorageInitialState['categories'] = [];
+  if (categoryKeys.length) {
+    // convert category map keys into the form of drop down
+    newCategories = categoryKeys.map((key) => ({
+      key,
+      value: key,
+    }));
+    // unsetting categoryMap
+    categoryMap = {};
+    // sorting categories in ascending order
+    newCategories = alphabetReorder(
+      newCategories as tStringObject[],
+      'key',
+    ) as tStorageInitialState['categories'];
+  }
+  // adding initial values to the start of sorted array
+  newCategories = [...storageInitialState.categories, ...newCategories];
+  // if selected category is not the default and not inside categories then set default
+  if (
+    selectedCategory !== storageInitialState.selectedCategory &&
+    !newCategories.find((category) => category.key === selectedCategory)
+  ) {
+    selectedCategory = storageInitialState.selectedCategory;
+  }
+  return { categories: newCategories, selectedCategory: selectedCategory };
 };
 
 // Processing data block
@@ -279,35 +294,14 @@ export const storageProcessDataBlock = async (
   return errors;
 };
 
-// Reorder storager categories
-export const storageReorderCategories = (
-  newCategories: tStorageInitialState['categories'],
-  newCategory: string,
-) => {
-  if (
-    newCategory &&
-    !newCategories.find((category) => category.key === newCategory)
-  ) {
-    // adding new category to the categories start
-    newCategories.unshift({
-      key: newCategory,
-      value: newCategory,
-    });
-    // sorting categories in ascending order
-    newCategories = alphabetReorder(
-      newCategories as tStringObject[],
-      'key',
-    ) as tStorageInitialState['categories'];
-  }
-  return newCategories;
-};
-
 // Filter data in block list
 export const storageFilterList = (
   keywords: tStorageInitialState['keywords'],
   searchType: tStorageInitialState['searchType'],
+  selectedCategory: tStorageInitialState['selectedCategory'],
   decodedData: tStorageInitialState['decodedData'],
 ) => {
+  // TODO adding logic to filter selected category too
   if (/\S/.test(keywords)) {
     const splittedKeywords = keywords.split(' ');
     // Filter the array based on the specified filterBy value

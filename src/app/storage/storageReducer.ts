@@ -6,7 +6,7 @@ import {
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import { setLocalStorage } from '../general/middlewares';
 import {
-  storageReorderCategories,
+  storageGetCategories,
   storageRepositionDataBlock,
 } from './storageMiddlewares';
 import { v4 as uuidV4 } from 'uuid';
@@ -135,32 +135,42 @@ export const storageReducer = (
 
     // set a data block
     case tStorageActionTypes.setDataBlock:
+      const newDecodedData = action.payload.id
+        ? state.decodedData.map((data) =>
+            data.id === action.payload.id ? action.payload : data,
+          )
+        : [{ ...action.payload, id: uuidV4() }, ...state.decodedData];
+      const newCategoryData = storageGetCategories(
+        newDecodedData,
+        state.selectedCategory,
+      );
       state = {
         ...state,
         status: storageInitialState.status,
         dataBlockEditor: storageInitialState.dataBlockEditor,
         exportAvailable: true,
-        categories: storageReorderCategories(
-          [...state.categories],
-          action.payload.category,
-        ),
-        decodedData: action.payload.id
-          ? state.decodedData.map((data) =>
-              data.id === action.payload.id ? action.payload : data,
-            )
-          : [{ ...action.payload, id: uuidV4() }, ...state.decodedData],
+        selectedCategory: newCategoryData.selectedCategory,
+        categories: newCategoryData.categories,
+        decodedData: newDecodedData,
       };
       return state;
 
     // delete a data block and set delete confirm initial state
     case tStorageActionTypes.deleteDataBlock:
+      const remainedDecodedData = state.decodedData.filter(
+        (data) => data.id !== action.payload,
+      );
+      const remainedCategoryData = storageGetCategories(
+        remainedDecodedData,
+        state.selectedCategory,
+      );
       state = {
         ...state,
         customConfirm: storageInitialState.customConfirm,
         exportAvailable: true,
-        decodedData: state.decodedData.filter(
-          (data) => data.id !== action.payload,
-        ),
+        selectedCategory: remainedCategoryData.selectedCategory,
+        categories: remainedCategoryData.categories,
+        decodedData: remainedDecodedData,
       };
       return state;
 
