@@ -28,10 +28,9 @@ function List() {
         {storageState.customConfirm && (
           <CustomConfirm {...storageState.customConfirm} />
         )}
+        {storageState.dataBlockEditor && <ListDataBlockEditor />}
+        {storageState.listPositionEditor !== false && <ListDataBlockEditor />}
         {storageState.exportAvailable && <ListExportButton />}
-        {storageState.dataBlockEditor && (
-          <ListDataBlockEditor listEditorData={storageState.dataBlockEditor} />
-        )}
         <ListHeader />
         <ListBody />
       </>

@@ -15,6 +15,7 @@ import {
   upperCaseFirst,
 } from '../general/middlewares';
 import { validateInput, validatePassword } from '../general/validations';
+import { v4 as uuidV4 } from 'uuid';
 import { toast } from 'react-toastify';
 
 // Validate login form data
@@ -161,14 +162,19 @@ export const storageProcessFile = async (
   // there was stored data previously
   if (encodedData) {
     // trying to decode by password
-    const result = tweetNaClDecryptData(encodedData, password);
+    const results = tweetNaClDecryptData(encodedData, password);
     // resulting the decoded data or an error message if it could not decode
-    if (result) {
+    if (results) {
       // get decoded data from results
-      processedData.decodedData = result;
+      processedData.decodedData = results.map((result) => ({
+        id: result.id ?? uuidV4(),
+        title: result.title ?? 'Missing title',
+        data: result.data ?? '',
+        category: result.category ?? '',
+      }));
       // get categories from decoded data
       processedData.categories = storageGetCategories(
-        result,
+        results,
         storageInitialState.selectedCategory,
       ).categories;
     } else {
@@ -273,13 +279,6 @@ export const storageProcessDataBlock = async (
       payload: 'idle',
     });
   } else {
-    // if new block is added, emptying keywords to avoid new element does not appear that caused by list filtering
-    if (!formData.id) {
-      const listClearKeywordsButton = document.getElementById(
-        'list-clear-keywords-button',
-      );
-      listClearKeywordsButton && listClearKeywordsButton.click();
-    }
     // dispatch newly created data
     storageDispatch({
       type: tStorageActionTypes.setDataBlock,
@@ -301,30 +300,34 @@ export const storageFilterList = (
   selectedCategory: tStorageInitialState['selectedCategory'],
   decodedData: tStorageInitialState['decodedData'],
 ) => {
-  // TODO adding logic to filter selected category too
+  let results = decodedData;
+  // filter data according to category
+  if (selectedCategory !== storageInitialState['selectedCategory']) {
+    results = results.filter(
+      (dataBlock) => dataBlock.category === selectedCategory,
+    );
+  }
   if (/\S/.test(keywords)) {
     const splittedKeywords = keywords.split(' ');
-    // Filter the array based on the specified filterBy value
-    const results = decodedData.filter((dataBlock) => {
-      // Check if the title or data contains any of the search keywords
-      const matchedKeywords = splittedKeywords.filter((keyword) => {
+    // filter the array based on the specified filterBy value
+    results = results.filter((dataBlock) => {
+      // check if the title or data contains any of the search keywords
+      const hasAllKeywords = splittedKeywords.every((keyword) => {
         // case insensitive search
         const regex = new RegExp(keyword, 'i');
-        if (searchType === 'all') {
-          // match all types of data
-          return regex.test(dataBlock.title) || regex.test(dataBlock.data);
-        } else {
-          // match only the selected type of data
-          return regex.test(dataBlock[searchType]);
-        }
+        // all or a selected type of data
+        const data =
+          searchType === 'all'
+            ? `${dataBlock.title} ${dataBlock.data}`
+            : dataBlock[searchType];
+        // test data
+        return regex.test(data);
       });
-      // return true if both words can be found
-      return matchedKeywords.length === splittedKeywords.length;
+      // return true if all keywords can be found
+      return hasAllKeywords;
     });
-    return results;
-  } else {
-    return decodedData;
   }
+  return results;
 };
 
 // Repostioning a storage data block

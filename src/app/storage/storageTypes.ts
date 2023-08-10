@@ -21,6 +21,7 @@ export type tStorageInitialState = {
   view: 'grid' | 'list';
   customConfirm: undefined | tCustomConfirm;
   dataBlockEditor: boolean | tStorageDataBlock;
+  listPositionEditor: false | string;
   exportAvailable: boolean;
   fileName: string;
   decodedData: tStorageDataBlock[];

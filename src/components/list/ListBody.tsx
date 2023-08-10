@@ -34,8 +34,12 @@ function ListBody() {
 
   return filteredData.length ? (
     <section className={`mt-[20px] grid gap-[10px] ${viewStyle}`}>
-      {filteredData.map((dataBlock) => (
-        <ListBodyElement key={dataBlock.id} dataBlock={dataBlock} />
+      {filteredData.map((dataBlock, index) => (
+        <ListBodyElement
+          key={dataBlock.id}
+          index={index}
+          dataBlock={dataBlock}
+        />
       ))}
     </section>
   ) : (

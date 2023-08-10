@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
+import { tStorageActionTypes } from '../../app/storage/storageTypes';
 import {
-  tStorageActionTypes,
-  tStorageInitialState,
-} from '../../app/storage/storageTypes';
-import { storageSettings } from '../../app/storage/storageInitialStates';
+  storageInitialState,
+  storageSettings,
+} from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import { storageProcessDataBlock } from '../../app/storage/storageMiddlewares';
 import PopUp from '../general/PopUp';
@@ -11,12 +11,9 @@ import FormInputBlock from '../form/FormInputBlock';
 import FormTextAreaBlock from '../form/FormTextAreaBlock';
 import FormPasswordBlock from '../form/FormPasswordBlock';
 import FormButtonBlock from '../form/FormButtonBlock';
+import WarningMessage from '../general/WarningMessage';
 
-type tProps = {
-  listEditorData: tStorageInitialState['dataBlockEditor'];
-};
-
-function ListDataBlockEditor(props: tProps) {
+function ListDataBlockEditor() {
   const { storageState, storageDispatch } = useAppContext();
   const [formData, setFormData] = useState({
     id: '',
@@ -33,16 +30,16 @@ function ListDataBlockEditor(props: tProps) {
   });
 
   useEffect(() => {
-    if (typeof props.listEditorData === 'object') {
+    if (typeof storageState.dataBlockEditor === 'object') {
       setFormData({
         ...formData,
-        id: props.listEditorData.id ?? '',
-        category: props.listEditorData.category ?? '',
-        title: props.listEditorData.title ?? '',
-        data: props.listEditorData.data ?? '',
+        id: storageState.dataBlockEditor.id,
+        category: storageState.dataBlockEditor.category,
+        title: storageState.dataBlockEditor.title,
+        data: storageState.dataBlockEditor.data,
       });
     }
-  }, [props.listEditorData]);
+  }, [storageState.dataBlockEditor]);
 
   const buttons = [
     {
@@ -64,6 +61,11 @@ function ListDataBlockEditor(props: tProps) {
         }),
     },
   ];
+
+  const warningMessage =
+    storageState.keywords !== storageInitialState.keywords ||
+    storageState.selectedCategory !== storageInitialState.selectedCategory ||
+    storageState.searchType !== storageInitialState.searchType;
 
   return (
     <PopUp>
@@ -103,6 +105,14 @@ function ListDataBlockEditor(props: tProps) {
         passwordError={formErrors.password}
         action={(value) => setFormData({ ...formData, password: value })}
       />
+      {warningMessage && (
+        <WarningMessage
+          message={
+            'This data block may not appear in list after saving data because some list filters are in effect.'
+          }
+          extraClass="mt-[15px]"
+        />
+      )}
       <FormButtonBlock buttons={buttons} />
     </PopUp>
   );

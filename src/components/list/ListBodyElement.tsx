@@ -3,6 +3,7 @@ import {
   tStorageActionTypes,
   tStorageDataBlock,
 } from '../../app/storage/storageTypes';
+import { storageInitialState } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import { storageConfirmDefaultCancel } from '../../app/storage/storageMiddlewares';
 import {
@@ -13,6 +14,7 @@ import {
 } from 'react-icons/ai';
 
 type tProps = {
+  index: number;
   dataBlock: tStorageDataBlock;
 };
 
@@ -40,11 +42,15 @@ function ListBodyElement(props: tProps) {
     cancel: storageConfirmDefaultCancel(storageDispatch),
   };
 
+  const positioning =
+    storageState.keywords === storageInitialState.keywords &&
+    storageState.selectedCategory === storageInitialState.selectedCategory;
+
   return (
     <div className="flex flex-wrap flex-col bg-[#fff] shadow-[0_0_0_1px_#d7d7d7] rounded-[3px]">
-      <div className="flex flex-wrap justify-between p-[10px] font-[500] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] w-full">
-        <span>{props.dataBlock.title}</span>
-        <span title="Category">
+      <div className="flex flex-wrap justify-between p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] w-full">
+        <span className="font-[500]">{props.dataBlock.title}</span>
+        <span title="Category" className="text-[#7a54bf]">
           {props.dataBlock.category && `#${props.dataBlock.category}#`}
         </span>
       </div>
@@ -74,7 +80,7 @@ function ListBodyElement(props: tProps) {
             }
           />
         </div>
-        {!storageState.keywords && (
+        {positioning && (
           <div className="flex flex-wrap gap-[15px]">
             <AiOutlineMinus
               className="icon-button hover"
@@ -86,6 +92,13 @@ function ListBodyElement(props: tProps) {
                 })
               }
             />
+            <button
+              className="icon-button hover px-[5px]"
+              title="Step to exact position"
+              onClick={() => console.log('belép')}
+            >
+              {props.index}
+            </button>
             <AiOutlinePlus
               className="icon-button hover"
               title="Step forward"

@@ -40,7 +40,9 @@ function DropDownMenu(props: tProps) {
         {props.selector}
       </button>
       <ul
-        className={`${showDropDown ? '' : 'hidden'} absolute ${
+        className={`${
+          showDropDown ? '' : 'hidden'
+        } absolute scroll-bar max-h-[450px] overflow-y-auto p-[0_2px_2px_2px] ml-[-2px] z-[2] ${
           props.classList
         }`}
       >

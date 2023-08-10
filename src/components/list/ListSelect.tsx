@@ -1,7 +1,7 @@
 import { tDropDownOption } from '../../app/general/types';
+import { useSelectData } from '../../app/general/hooks';
 import DropDownMenu from '../general/DropDownMenu';
 import DropDownSelector from '../general/DropDownSelector';
-import { useSelectData } from '../../app/general/hooks';
 
 type tProps = {
   selected: tDropDownOption['key'];
