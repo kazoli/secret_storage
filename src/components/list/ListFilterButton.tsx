@@ -3,7 +3,7 @@ type tProps = {
   action: () => void;
 };
 
-function ListButton(props: tProps) {
+function ListFilterButton(props: tProps) {
   return (
     <button className="list-element button" onClick={props.action}>
       {props.text}
@@ -11,4 +11,4 @@ function ListButton(props: tProps) {
   );
 }
 
-export default ListButton;
+export default ListFilterButton;

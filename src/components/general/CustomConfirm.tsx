@@ -45,7 +45,7 @@ function CustomConfirm(props: tProps) {
   ];
 
   return (
-    <PopUp extraClass="max-w-[500px]">
+    <PopUp style="max-w-[500px]">
       <div className="p-[5px] bg-[#fff] shadow-[inset_0_0_4px_0_#9d81d0,0_0_0_1px_#9d81d0] rounded-[3px]">
         {props.text}
       </div>

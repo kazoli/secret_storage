@@ -110,7 +110,7 @@ function ListDataBlockEditor() {
           message={
             'This data block may not appear in list after saving data because some list filters are in effect.'
           }
-          extraClass="mt-[15px]"
+          style="mt-[15px]"
         />
       )}
       <FormButtonBlock buttons={buttons} />

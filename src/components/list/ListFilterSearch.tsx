@@ -7,9 +7,10 @@ import { useAppContext } from '../core/Context';
 import { MdClear } from 'react-icons/md';
 import { storageSearchTypes } from '../../app/storage/storageInitialStates';
 import { tDropDownOption } from '../../app/general/types';
-import ListSelect from './ListSelect';
+import ListFilterSelect from './ListFilterSelect';
+import IconButton from '../general/IconButton';
 
-function ListSearch() {
+function ListFilterSearch() {
   const { storageState, storageDispatch } = useAppContext();
   const [keywords, setKeywords] = useState('');
 
@@ -37,16 +38,15 @@ function ListSearch() {
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
         />
-        <button
+        <IconButton
           id="list-clear-keywords-button"
-          className="icon-button hover"
+          style="hover"
           title="Clear text"
-          onClick={() => setKeywords('')}
-        >
-          <MdClear />
-        </button>
+          leftIcon={<MdClear />}
+          action={() => setKeywords('')}
+        />
       </div>
-      <ListSelect
+      <ListFilterSelect
         selected={storageState.searchType}
         options={storageSearchTypes}
         action={(value: tDropDownOption['key']) =>
@@ -60,4 +60,4 @@ function ListSearch() {
   );
 }
 
-export default ListSearch;
+export default ListFilterSearch;

@@ -84,6 +84,7 @@ export const storageReducer = (
     case tStorageActionTypes.setKeywords:
       state = {
         ...state,
+        listRepositionBlockId: false,
         keywords: action.payload,
       };
       return state;
@@ -92,6 +93,7 @@ export const storageReducer = (
     case tStorageActionTypes.setSelectedCategory:
       state = {
         ...state,
+        listRepositionBlockId: false,
         selectedCategory: action.payload,
       };
       return state;
@@ -113,13 +115,23 @@ export const storageReducer = (
       };
       return state;
 
-    // set position
-    case tStorageActionTypes.setPosition:
+    // set block id to be repositioned in list
+    case tStorageActionTypes.setListRepositionBlockId:
+      state = {
+        ...state,
+        listRepositionBlockId: action.payload,
+      };
+      return state;
+
+    // set block into new list position
+    case tStorageActionTypes.setNewListPosition:
       state = {
         ...state,
         exportAvailable: true,
+        listRepositionBlockId: false,
         decodedData: storageRepositionDataBlock(
           state.decodedData,
+          state.listRepositionBlockId,
           action.payload,
         ),
       };
@@ -129,6 +141,7 @@ export const storageReducer = (
     case tStorageActionTypes.setDataBlockEditor:
       state = {
         ...state,
+        listRepositionBlockId: false,
         dataBlockEditor: action.payload,
       };
       return state;

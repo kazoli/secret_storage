@@ -37,7 +37,7 @@ export const storageInitialState: tStorageInitialState = {
   view: getLocalStorage(storageSettings.localStorage.viewKey) ?? 'grid',
   customConfirm: undefined,
   dataBlockEditor: false,
-  listPositionEditor: false,
+  listRepositionBlockId: false,
   exportAvailable: false,
   fileName: storageSettings.defaultFileName,
   decodedData: [],

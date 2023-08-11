@@ -5,7 +5,7 @@ import DefaultLayout from '../layout/DefaultLayout';
 import CustomConfirm from '../general/CustomConfirm';
 import ListDataBlockEditor from '../list/ListDataBlockEditor';
 import ListExportButton from '../list/ListExportButton';
-import ListHeader from '../list/ListHeader';
+import ListFilterTopBlock from '../list/ListFilterTopBlock';
 import ListBody from '../list/ListBody';
 
 function List() {
@@ -29,9 +29,8 @@ function List() {
           <CustomConfirm {...storageState.customConfirm} />
         )}
         {storageState.dataBlockEditor && <ListDataBlockEditor />}
-        {storageState.listPositionEditor !== false && <ListDataBlockEditor />}
         {storageState.exportAvailable && <ListExportButton />}
-        <ListHeader />
+        <ListFilterTopBlock />
         <ListBody />
       </>
     </DefaultLayout>

@@ -5,12 +5,12 @@ import {
 } from '../../app/storage/storageTypes';
 import { storageInitialState } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
-import ListButton from './ListButton';
-import ListSearch from './ListSearch';
-import ListSelect from './ListSelect';
-import ListView from './ListView';
+import ListFilterButton from './ListFilterButton';
+import ListFilterSearch from './ListFilterSearch';
+import ListFilterSelect from './ListFilterSelect';
+import ListFilterView from './ListFilterView';
 
-function ListHeader() {
+function ListFilterTopBlock() {
   const { storageState, storageDispatch } = useAppContext();
 
   const setDataBlockEditor = () => {
@@ -50,23 +50,23 @@ function ListHeader() {
 
   return (
     <section className="flex flex-wrap gap-[10px]">
-      <ListSearch />
+      <ListFilterSearch />
       <div className="flex flex-wrap-reverse gap-[10px] flex-[1_1_100%] justify-between">
         <div className="flex flex-wrap gap-[10px]">
-          <ListButton text="Add new item" action={setDataBlockEditor} />
-          <ListButton text="Reset list" action={resetList} />
+          <ListFilterButton text="Add new item" action={setDataBlockEditor} />
+          <ListFilterButton text="Reset list" action={resetList} />
         </div>
         <div className="flex flex-wrap gap-[10px]">
-          <ListSelect
+          <ListFilterSelect
             selected={storageState.selectedCategory}
             options={storageState.categories}
             action={setSelectedCategory}
           />
-          <ListView />
+          <ListFilterView />
         </div>
       </div>
     </section>
   );
 }
 
-export default ListHeader;
+export default ListFilterTopBlock;

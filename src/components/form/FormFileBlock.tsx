@@ -45,13 +45,17 @@ function FormFileBlock(props: tProps) {
 
   return (
     <div
-      className={`flex flex-wrap first-of-type:mt-0 mt-[15px] ${props.blockStyle}`}
+      className={`flex flex-wrap first-of-type:mt-0 mt-[15px] ${
+        props.blockStyle ?? ''
+      }`}
     >
       {props.label && (
         <FormLabel id="" labelStyle={props.labelStyle} label={props.label} />
       )}
       <div
-        className={`flex flex-wrap gap-[5px_10px] items-center ${props.fileBlockStyle}`}
+        className={`flex flex-wrap gap-[5px_10px] items-center ${
+          props.fileBlockStyle ?? ''
+        }`}
       >
         <label htmlFor="file-input" className="form-button">
           {props.buttonText}
@@ -75,7 +79,10 @@ function FormFileBlock(props: tProps) {
           onChange={handleFileChange}
         />
       </div>
-      <ErrorMessage text={props.error} style={`w-full ${props.errorStyle}`} />
+      <ErrorMessage
+        text={props.error}
+        style={`w-full ${props.errorStyle ?? ''}`}
+      />
     </div>
   );
 }

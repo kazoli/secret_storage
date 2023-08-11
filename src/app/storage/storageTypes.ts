@@ -21,7 +21,7 @@ export type tStorageInitialState = {
   view: 'grid' | 'list';
   customConfirm: undefined | tCustomConfirm;
   dataBlockEditor: boolean | tStorageDataBlock;
-  listPositionEditor: false | string;
+  listRepositionBlockId: false | tStorageDataBlock['id'];
   exportAvailable: boolean;
   fileName: string;
   decodedData: tStorageDataBlock[];
@@ -39,7 +39,8 @@ export enum tStorageActionTypes {
   setSelectedCategory = 'setSelectedCategory',
   setSearchType = 'setSearchType',
   setView = 'setView',
-  setPosition = 'setPosition',
+  setListRepositionBlockId = 'setListRepositionBlockId',
+  setNewListPosition = 'setNewListPosition',
   setDataBlockEditor = 'setDataBlockEditor',
   setDataBlock = 'setDataBlock',
   setCustomConfirm = 'setCustomConfirm',
@@ -69,9 +70,10 @@ export type tStoragePayload = {
   [tStorageActionTypes.setSelectedCategory]: tStorageInitialState['selectedCategory'];
   [tStorageActionTypes.setSearchType]: tStorageInitialState['searchType'];
   [tStorageActionTypes.setView]: tStorageInitialState['view'];
-  [tStorageActionTypes.setPosition]: {
-    direction: 'backward' | 'forward';
+  [tStorageActionTypes.setListRepositionBlockId]: tStorageInitialState['listRepositionBlockId'];
+  [tStorageActionTypes.setNewListPosition]: {
     id: tStorageDataBlock['id'];
+    position: 'before' | 'after';
   };
   [tStorageActionTypes.setDataBlockEditor]: tStorageInitialState['dataBlockEditor'];
   [tStorageActionTypes.setDataBlock]: tStorageDataBlock;

@@ -1,42 +1,37 @@
 import { tStorageActionTypes } from '../../app/storage/storageTypes';
 import { useAppContext } from '../core/Context';
 import { TfiLayoutGrid2, TfiViewList } from 'react-icons/tfi';
+import IconButton from '../general/IconButton';
 
-function ListView() {
+function ListFilterView() {
   const { storageState, storageDispatch } = useAppContext();
 
   return (
     <div className="list-element">
-      <button
-        className={`icon-button ${
-          storageState.view === 'grid' ? 'highlighted' : ''
-        }`}
+      <IconButton
+        style={storageState.view === 'grid' ? 'highlighted' : ''}
         title="Grid view"
-        onClick={() =>
+        leftIcon={<TfiLayoutGrid2 />}
+        action={() =>
           storageDispatch({
             type: tStorageActionTypes.setView,
             payload: 'grid',
           })
         }
-      >
-        <TfiLayoutGrid2 />
-      </button>
-      <button
-        className={`icon-button ${
-          storageState.view === 'list' ? 'highlighted' : ''
-        }`}
+      />
+      <IconButton
+        style={storageState.view === 'list' ? 'highlighted' : ''}
         title="List view"
-        onClick={() =>
+        leftIcon={<TfiViewList />}
+        action={() =>
           storageDispatch({
             type: tStorageActionTypes.setView,
             payload: 'list',
           })
         }
-      >
-        <TfiViewList />
-      </button>
+      />
     </div>
   );
 }
 
-export default ListView;
+export default ListFilterView;

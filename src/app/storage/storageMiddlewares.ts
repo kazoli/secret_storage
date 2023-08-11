@@ -2,6 +2,7 @@ import { tCustomConfirm, tFileContent, tStringObject } from '../general/types';
 import {
   tStorageActionTypes,
   tStorageActions,
+  tStorageDataBlock,
   tStorageInitialState,
   tStoragePayload,
 } from './storageTypes';
@@ -333,57 +334,42 @@ export const storageFilterList = (
 // Repostioning a storage data block
 export const storageRepositionDataBlock = (
   decodedData: tStorageInitialState['decodedData'],
-  payload: tStoragePayload['setPosition'],
+  repositionedBlockId: tStorageInitialState['listRepositionBlockId'],
+  selectedBlock: tStoragePayload['setNewListPosition'],
 ) => {
-  const decodedDataLength = decodedData.length;
-  let mainIndex = 0;
-  let ignoreNext = false;
-  const reorderedData = decodedData.reduce(
-    (result: tStorageInitialState['decodedData'], block, index) => {
-      if (payload.id === block.id) {
-        if (payload.direction === 'backward') {
-          const prevIndex = index - 1;
-          if (prevIndex < 0) {
-            // main index staying 0 that next block will be pushed to the begining
-            // it was the first element in the array and step backward to the last position
-            result[decodedDataLength - 1] = block;
-          } else {
-            // put previous block into current position
-            result[index] = result[prevIndex];
-            // put current block into previous position
-            result[prevIndex] = block;
-            // increase main index to equal current index in next round
-            mainIndex++;
-          }
-        } else {
-          const nextIndex = index + 1;
-          if (nextIndex > decodedDataLength - 1) {
-            // it was the last block in the array and step forward to the first position
-            result.unshift(block);
-          } else {
-            // put next block into current position
-            result[index] = decodedData[nextIndex];
-            // put current block into next position
-            result[nextIndex] = block;
-            // increase main index to equal current index in next round
-            mainIndex++;
-            // set to ignore next block becuse that has been pushed already into array
-            ignoreNext = true;
-          }
-        }
-      } else {
-        if (ignoreNext) {
-          ignoreNext = false;
-        } else {
-          result[mainIndex] = block;
-        }
-        // increase main index to equal current index in next round
-        mainIndex++;
+  let index = 0;
+  const repositionedBlock = { index: 0, data: {} as tStorageDataBlock };
+  const reorderedData = [];
+  decodedData.forEach((block) => {
+    // store data of repositioned block
+    if (block.id === repositionedBlockId) {
+      repositionedBlock.data = block;
+    } else {
+      // repositioned block will be pushed after the selected block
+      if (selectedBlock.position === 'after') {
+        reorderedData.push(block);
+        // increase index to show the next position of reordered data array
+        index++;
       }
-      return result;
-    },
-    [],
-  );
+      // the selected block before or after which the other will be inserted
+      if (block.id === selectedBlock.id) {
+        // push an empty block into the new position
+        reorderedData.push({} as tStorageDataBlock);
+        // store current index of reordered data array
+        repositionedBlock.index = index;
+        // increase index to show the next position of reordered data array
+        index++;
+      }
+      // repositioned block will be pushed before the selected block
+      if (selectedBlock.position === 'before') {
+        reorderedData.push(block);
+        // increase index to show the next position of reordered data array
+        index++;
+      }
+    }
+  });
+  // insert the repositioned block at its new position
+  reorderedData[repositionedBlock.index] = repositionedBlock.data;
   return reorderedData;
 };
 

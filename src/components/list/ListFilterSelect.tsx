@@ -9,7 +9,7 @@ type tProps = {
   action: (value: tDropDownOption['key']) => void;
 };
 
-function ListSelect(props: tProps) {
+function ListFilterSelect(props: tProps) {
   const selectData = useSelectData(props.options, props.selected);
 
   return (
@@ -24,4 +24,4 @@ function ListSelect(props: tProps) {
   );
 }
 
-export default ListSelect;
+export default ListFilterSelect;
