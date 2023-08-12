@@ -19,8 +19,9 @@ function HeaderMenu(props: tProps) {
 
   const options = storageState.loggedIn
     ? [
-        { key: 'exportAvailable', value: 'Export data' },
+        { key: 'list', value: 'Data list' },
         { key: 'changePassword', value: 'Change password' },
+        { key: 'exportAvailable', value: 'Export data' },
         { key: 'logOut', value: 'Log out' },
       ]
     : [{ key: 'logIn', value: 'Log in' }];
@@ -51,6 +52,9 @@ function HeaderMenu(props: tProps) {
           storageDispatch({ type: tStorageActionTypes.logOut });
         }
         break;
+      case 'changePassword':
+        navigate('/change-password');
+        break;
       case 'exportAvailable':
         storageDispatch({
           type: tStorageActionTypes.setCustomConfirm,
@@ -62,9 +66,6 @@ function HeaderMenu(props: tProps) {
           ),
         });
         break;
-      case 'changePassword':
-        navigate('/change-password');
-        break;
       default:
         navigate('/');
     }
@@ -72,7 +73,7 @@ function HeaderMenu(props: tProps) {
 
   return (
     <DropDownMenu
-      selector={
+      selected={
         <HiOutlineMenu className="text-[2rem] cursor-pointer outline-none" />
       }
       classContainer="relative"

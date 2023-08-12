@@ -5,7 +5,7 @@ type tProps = {
   classContainer: string;
   classList: string;
   classElement: string;
-  selector: string | JSX.Element;
+  selected: string | JSX.Element;
   options: tDropDownOption[];
   action: (value: tDropDownOption['key']) => void;
 };
@@ -34,16 +34,16 @@ function DropDownMenu(props: tProps) {
     <div className={props.classContainer}>
       <button
         ref={dropDownRef}
-        className="block w-[100%]"
+        className="block w-[100%] text-left"
         onClick={() => setShowDropDown(!showDropDown)}
       >
-        {props.selector}
+        {props.selected}
       </button>
       <ul
         className={`${
           showDropDown ? '' : 'hidden'
-        } absolute scroll-bar max-h-[450px] overflow-y-auto p-[0_2px_2px_2px] ml-[-2px] z-[2] ${
-          props.classList ?? ''
+        } absolute scroll-bar max-h-[50vh] overflow-y-auto p-[2px] ml-[-2px] z-[2] ${
+          props.classList
         }`}
       >
         {props.options.map((element) => (

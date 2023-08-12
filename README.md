@@ -10,18 +10,18 @@ Only frontend based codes, no backend or any data movement outside your browser.
 #FEATURES
 
 1. You can select an encoded file to decode or do not select any one and it will create a new one.
-2. In case of a selected file, log in can be possible with the password of encoded data.
+2. In case of a selected file, log in and decoding can be possible with the password of encoded data.
 3. In case of a new file, entered password becomes the valid one to every operation.
 4. Every time the data or password have been changed, to store into the encoded file, you need to export the data. Export button will appear in the bottom right corner or always available in top right menu.
-5. Password is necessary to every operation, to no one can change or overwrite your data if you left your computer unattended.
+5. Password is necessary to add, modifiy or remove a data block, to no one can change or overwrite your data if you left your computer unattended.
 6. Password cannot be pasted into any of the password fields for security reasons. (If you better like that if passwords can be pasted everywhere, change the value of "onPaste" to true in src/components/form/FormPasswordBlock.tsx. Rebuild or compilation needed to work accordingly.)
 7. Password can be modified.
 8. Data stored in title and content divided blocks.
 9. Categories can be added to blocks and list can be filtered by them too.
-10. Data can be searched by keywords in title, data or all.
-11. List and grid layout available.
-12. Blocks can be added, modified and deleted with the valid password.
-13. Blocks can be moved or reordered if list is not filtered.
+10. By clicking on a category link you can filter list to that category or in case of category filtering you can clear it.
+11. Data can be searched by keywords in title, data or all.
+12. List and grid layout available.
+13. Every data block can be repositioned before or after an other one.
 
 #BEFORE RUN ANY CODE
 

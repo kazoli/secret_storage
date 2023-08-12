@@ -12,10 +12,21 @@ import ListFilterView from './ListFilterView';
 
 function ListFilterTopBlock() {
   const { storageState, storageDispatch } = useAppContext();
+  const listFilterShow =
+    storageState.keywords !== storageInitialState.keywords ||
+    storageState.searchType !== storageInitialState.searchType ||
+    storageState.selectedCategory !== storageInitialState.selectedCategory;
 
   const setDataBlockEditor = () => {
     storageDispatch({
       type: tStorageActionTypes.setDataBlockEditor,
+      payload: true,
+    });
+  };
+
+  const setListOrderEditor = () => {
+    storageDispatch({
+      type: tStorageActionTypes.setListOrderEditor,
       payload: true,
     });
   };
@@ -54,7 +65,10 @@ function ListFilterTopBlock() {
       <div className="flex flex-wrap-reverse gap-[10px] flex-[1_1_100%] justify-between">
         <div className="flex flex-wrap gap-[10px]">
           <ListFilterButton text="Add new item" action={setDataBlockEditor} />
-          <ListFilterButton text="Reset list" action={resetList} />
+          <ListFilterButton text="Reorder list" action={setListOrderEditor} />
+          {listFilterShow && (
+            <ListFilterButton text="Reset list" action={resetList} />
+          )}
         </div>
         <div className="flex flex-wrap gap-[10px]">
           <ListFilterSelect

@@ -123,6 +123,14 @@ export const storageReducer = (
       };
       return state;
 
+    // set list order editor
+    case tStorageActionTypes.setListOrderEditor:
+      state = {
+        ...state,
+        listOrderEditor: action.payload,
+      };
+      return state;
+
     // set block into new list position
     case tStorageActionTypes.setNewListPosition:
       state = {

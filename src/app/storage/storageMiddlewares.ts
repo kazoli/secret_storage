@@ -341,31 +341,34 @@ export const storageRepositionDataBlock = (
   const repositionedBlock = { index: 0, data: {} as tStorageDataBlock };
   const reorderedData = [];
   decodedData.forEach((block) => {
-    // store data of repositioned block
+    // storing data of repositioned block
     if (block.id === repositionedBlockId) {
       repositionedBlock.data = block;
     } else {
-      // repositioned block will be pushed after the selected block
-      if (selectedBlock.position === 'after') {
-        reorderedData.push(block);
-        // increase index to show the next position of reordered data array
-        index++;
-      }
-      // the selected block before or after which the other will be inserted
+      // the insertion occurs before or after this selected block
       if (block.id === selectedBlock.id) {
-        // push an empty block into the new position
+        // if repositioned block is wanted to be pushed after the selected block
+        if (selectedBlock.position === 'after') {
+          // selected block push before the repositioned block
+          reorderedData.push(block);
+          // increase index to show the next position of reordered data array
+          index++;
+        }
+        // push an empty block into the new position for repositioned block
         reorderedData.push({} as tStorageDataBlock);
-        // store current index of reordered data array
+        // store current index of reordered data array for repositioned block
         repositionedBlock.index = index;
         // increase index to show the next position of reordered data array
         index++;
+        // if the insertion occurs after the selected block, goes the next round to avoid pushing selected block into the array again in next steps
+        if (selectedBlock.position === 'after') {
+          return;
+        }
       }
-      // repositioned block will be pushed before the selected block
-      if (selectedBlock.position === 'before') {
-        reorderedData.push(block);
-        // increase index to show the next position of reordered data array
-        index++;
-      }
+      // push blocks into reordered array
+      reorderedData.push(block);
+      // increase index to show the next position of reordered data array
+      index++;
     }
   });
   // insert the repositioned block at its new position

@@ -34,7 +34,7 @@ function FormInputBlock(props: tProps) {
       )}
       <div className="relative flex-[1_1_auto]">
         <input
-          className={`w-[100%] rounded-[3px] border border-[#d0d0d0] focus:shadow-[0_0_3px_0_#d0d0d0] rounded-[2px] p-[5px] ${
+          className={`w-[100%] border border-[#d0d0d0] focus:shadow-[0_0_3px_0_#d0d0d0] rounded-[3px] p-[5px] ${
             props.inputStyle ?? ''
           }`}
           id={props.id}

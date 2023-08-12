@@ -14,9 +14,9 @@ function PopUp(props: tProps) {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-[5000] flex justify-center items-center">
+    <div className="fixed inset-0 h-[100vh] overflow-auto bg-black/70 z-[5000] flex justify-center items-center">
       <div
-        className={`p-[10px] m-[0_15px] w-[1200px] max-h-[100vh] overflow-auto bg-[#fff] shadow-[0_0_10px_1px_#000,inset_0_0_2px_0_#000] rounded-[3px] ${
+        className={`p-[10px] h-[fit-content] m-[auto_15px] w-[1200px] bg-[#fff] shadow-[0_0_10px_1px_#000,inset_0_0_2px_0_#000] rounded-[3px] ${
           props.style ?? ''
         }`}
       >

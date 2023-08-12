@@ -9,6 +9,7 @@ import { storageConfirmDefaultCancel } from '../../app/storage/storageMiddleware
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { VscDebugStepBack, VscDebugStepOver } from 'react-icons/vsc';
 import IconButton from '../general/IconButton';
+import { storageInitialState } from '../../app/storage/storageInitialStates';
 
 type tProps = {
   dataBlock: tStorageDataBlock;
@@ -39,7 +40,7 @@ function ListBodyElement(props: tProps) {
           <>
             <IconButton
               style="hover px-[5px] uppercase"
-              title="Insert before this"
+              title="Insert before this data block"
               leftIcon={<VscDebugStepBack />}
               action={() =>
                 storageDispatch({
@@ -50,7 +51,7 @@ function ListBodyElement(props: tProps) {
             />
             <IconButton
               style="hover px-[5px] uppercase"
-              title="Insert after this"
+              title="Insert after this data block"
               leftIcon={<VscDebugStepOver />}
               action={() =>
                 storageDispatch({
@@ -100,25 +101,28 @@ function ListBodyElement(props: tProps) {
     cancel: storageConfirmDefaultCancel(storageDispatch),
   };
 
-  const selectCategory = () => {
-    if (storageState.selectedCategory !== props.dataBlock.category) {
-      storageDispatch({
-        type: tStorageActionTypes.setSelectedCategory,
-        payload: props.dataBlock.category,
-      });
-    }
-  };
-
   return (
     <div className="flex flex-wrap flex-col bg-[#fff] shadow-[0_0_0_1px_#d7d7d7] rounded-[3px]">
       <div className="flex flex-wrap justify-between p-[10px] bg-[#fff] shadow-[inset_0_0_15px_0_#e7e7e7] rounded-[3px_3px_0_0] w-full">
         <span className="font-[500]">{props.dataBlock.title}</span>
         <span
-          title="Category"
+          title={
+            storageState.selectedCategory === props.dataBlock.category
+              ? 'Clear category filtering'
+              : `Filter to "${props.dataBlock.category}" category`
+          }
           className="text-[#0000ff] hover:underline cursor-pointer"
-          onClick={selectCategory}
+          onClick={() => {
+            storageDispatch({
+              type: tStorageActionTypes.setSelectedCategory,
+              payload:
+                storageState.selectedCategory === props.dataBlock.category
+                  ? storageInitialState.selectedCategory
+                  : props.dataBlock.category,
+            });
+          }}
         >
-          {props.dataBlock.category && `#${props.dataBlock.category}#`}
+          {props.dataBlock.category}
         </span>
       </div>
       <div className="p-[10px] flex-[1_1_auto] whitespace-pre-line w-full">

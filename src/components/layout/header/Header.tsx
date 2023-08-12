@@ -5,7 +5,6 @@ import HeaderMenu from './HeaderMenu';
 function Header() {
   const initialPosition = 'top-0';
   const [position, setPosition] = useState(initialPosition);
-  const hideMenu = position !== initialPosition;
 
   // header show only at up scrolling
   useEffect(() => {
@@ -16,6 +15,7 @@ function Header() {
       if (prev.position !== currPosition) {
         // scroll direction change
         setPosition(currPosition);
+        // current position becomes prev position
         prev.position = currPosition;
       }
       prev.top = window.scrollY;
@@ -33,7 +33,7 @@ function Header() {
     >
       <div className="content-positioner flex items-center justify-between gap-[60px]">
         <HeaderLogo />
-        <HeaderMenu hide={hideMenu} />
+        <HeaderMenu hide={position !== initialPosition} />
       </div>
     </header>
   );
