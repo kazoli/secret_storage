@@ -1,12 +1,14 @@
 import { tDropDownOption } from '../general/types';
 import { tStorageInitialState } from './storageTypes';
 import { getLocalStorage } from '../general/middlewares';
+import { storageInitializeCategories } from './storageMiddlewares';
 
 // Storage default settings
 export const storageSettings = {
   localStorage: { viewKey: 'secretStorageView' },
   defaultFileName: 'secret-storage.json',
   fileUploadText: 'New file',
+  categoryInitialList: { default: 'All categories', '': 'Uncategorized' },
   passwordCheckError: 'Password is not correct',
   passwordLength: { min: 8, max: 30 },
   titleLength: { min: 3, max: 200 },
@@ -27,10 +29,7 @@ export const storageInitialState: tStorageInitialState = {
   loggedIn: false,
   encodedPassword: '',
   encodedData: '',
-  categories: [
-    { key: 'default', value: 'All categories' },
-    { key: '', value: 'Uncategorized' },
-  ],
+  categories: storageInitializeCategories(),
   selectedCategory: 'default',
   keywords: '',
   searchType: 'all',

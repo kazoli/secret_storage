@@ -19,6 +19,21 @@ import { validateInput, validatePassword } from '../general/validations';
 import { v4 as uuidV4 } from 'uuid';
 import { toast } from 'react-toastify';
 
+// Initialize categories to a drop down menu form from original object
+export const storageInitializeCategories = () => {
+  const categories: tStorageInitialState['categories'] = [];
+  for (const key in storageSettings.categoryInitialList) {
+    categories.push({
+      key: key,
+      value:
+        storageSettings.categoryInitialList[
+          key as keyof typeof storageSettings.categoryInitialList
+        ],
+    });
+  }
+  return categories;
+};
+
 // Validate login form data
 export const storageLoginValidate = async (password: string) => {
   return validatePassword(
@@ -174,7 +189,7 @@ export const storageProcessFile = async (
         category: result.category ?? '',
       }));
       // get categories from decoded data
-      processedData.categories = storageGetCategories(
+      processedData.categories = storageCategorySelect(
         results,
         storageInitialState.selectedCategory,
       ).categories;
@@ -203,47 +218,52 @@ export const storageProcessFile = async (
   return error;
 };
 
-// Get categories from data list
-export const storageGetCategories = (
+// Get the category object array in original order
+export const storageCategories = (
+  decodedData: tStorageInitialState['decodedData'],
+  ignoreEmpty = true,
+) => {
+  // create a set with unique categories
+  const categorySet = new Set<tStorageDataBlock['category']>();
+  // get all blocks of decoded data
+  decodedData.forEach((data) => {
+    if (!ignoreEmpty || data.category) {
+      categorySet.add(data.category);
+    }
+  });
+  // return the array from category set
+  return Array.from(categorySet).map((key) => ({
+    key,
+    value: key || storageSettings.categoryInitialList[''],
+  }));
+};
+
+// Get category select data from data list
+export const storageCategorySelect = (
   decodedData: tStorageInitialState['decodedData'],
   selectedCategory: tStorageInitialState['selectedCategory'],
 ) => {
-  // category map for the most efficient way to get unique categories
-  let categoryMap: { [key: string]: true } = {};
-  // looping through all resulted data
-  decodedData.forEach((data) => {
-    // pushing category if not empty
-    if (data.category) {
-      // adding to category map if it does not even contain
-      !categoryMap[data.category] && (categoryMap[data.category] = true);
-    }
-  });
-  const categoryKeys = Object.keys(categoryMap);
-  let newCategories: tStorageInitialState['categories'] = [];
-  if (categoryKeys.length) {
-    // convert category map keys into the form of drop down
-    newCategories = categoryKeys.map((key) => ({
-      key,
-      value: key,
-    }));
-    // unsetting categoryMap
-    categoryMap = {};
+  // get categories in proper form
+  let categories: tStorageInitialState['categories'] =
+    storageCategories(decodedData);
+  // if new categories has at least an element
+  if (categories.length) {
     // sorting categories in ascending order
-    newCategories = alphabetReorder(
-      newCategories as tStringObject[],
+    categories = alphabetReorder(
+      categories as tStringObject[],
       'key',
     ) as tStorageInitialState['categories'];
   }
   // adding initial values to the start of sorted array
-  newCategories = [...storageInitialState.categories, ...newCategories];
+  categories = [...storageInitialState.categories, ...categories];
   // if selected category is not the default and not inside categories then set default
   if (
     selectedCategory !== storageInitialState.selectedCategory &&
-    !newCategories.find((category) => category.key === selectedCategory)
+    !categories.find((category) => category.key === selectedCategory)
   ) {
     selectedCategory = storageInitialState.selectedCategory;
   }
-  return { categories: newCategories, selectedCategory: selectedCategory };
+  return { categories: categories, selectedCategory: selectedCategory };
 };
 
 // Processing data block

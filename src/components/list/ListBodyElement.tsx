@@ -4,12 +4,12 @@ import {
   tStorageActionTypes,
   tStorageDataBlock,
 } from '../../app/storage/storageTypes';
+import { storageInitialState } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import { storageConfirmDefaultCancel } from '../../app/storage/storageMiddlewares';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { VscDebugStepBack, VscDebugStepOver } from 'react-icons/vsc';
 import IconButton from '../general/IconButton';
-import { storageInitialState } from '../../app/storage/storageInitialStates';
 
 type tProps = {
   dataBlock: tStorageDataBlock;
@@ -39,7 +39,7 @@ function ListBodyElement(props: tProps) {
         setButtons(
           <>
             <IconButton
-              style="hover px-[5px] uppercase"
+              style="hover"
               title="Insert before this data block"
               leftIcon={<VscDebugStepBack />}
               action={() =>
@@ -50,7 +50,7 @@ function ListBodyElement(props: tProps) {
               }
             />
             <IconButton
-              style="hover px-[5px] uppercase"
+              style="hover"
               title="Insert after this data block"
               leftIcon={<VscDebugStepOver />}
               action={() =>

@@ -11,7 +11,7 @@ import FormInputBlock from '../form/FormInputBlock';
 import FormTextAreaBlock from '../form/FormTextAreaBlock';
 import FormPasswordBlock from '../form/FormPasswordBlock';
 import FormButtonBlock from '../form/FormButtonBlock';
-import WarningMessage from '../general/WarningMessage';
+import WarningBlock from '../general/WarningBlock';
 
 function ListDataBlockEditor() {
   const { storageState, storageDispatch } = useAppContext();
@@ -106,8 +106,8 @@ function ListDataBlockEditor() {
         action={(value) => setFormData({ ...formData, password: value })}
       />
       {warningMessage && (
-        <WarningMessage
-          message={
+        <WarningBlock
+          text={
             'This data block may not appear in list after saving data because some list filters are in effect.'
           }
           style="mt-[15px]"

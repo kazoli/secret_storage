@@ -6,7 +6,7 @@ import {
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import { setLocalStorage } from '../general/middlewares';
 import {
-  storageGetCategories,
+  storageCategorySelect,
   storageRepositionDataBlock,
 } from './storageMiddlewares';
 import { v4 as uuidV4 } from 'uuid';
@@ -161,7 +161,7 @@ export const storageReducer = (
             data.id === action.payload.id ? action.payload : data,
           )
         : [{ ...action.payload, id: uuidV4() }, ...state.decodedData];
-      const newCategoryData = storageGetCategories(
+      const newCategoryData = storageCategorySelect(
         newDecodedData,
         state.selectedCategory,
       );
@@ -181,7 +181,7 @@ export const storageReducer = (
       const remainedDecodedData = state.decodedData.filter(
         (data) => data.id !== action.payload,
       );
-      const remainedCategoryData = storageGetCategories(
+      const remainedCategoryData = storageCategorySelect(
         remainedDecodedData,
         state.selectedCategory,
       );

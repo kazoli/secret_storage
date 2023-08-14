@@ -5,6 +5,7 @@ import { bcryptCompare } from '../../app/general/middlewares';
 import PopUp from './PopUp';
 import FormPasswordBlock from '../form/FormPasswordBlock';
 import FormButtonBlock from '../form/FormButtonBlock';
+import CommentBlock from './CommentBlock';
 
 type tProps = tCustomConfirm;
 
@@ -46,9 +47,7 @@ function CustomConfirm(props: tProps) {
 
   return (
     <PopUp style="max-w-[500px]">
-      <div className="p-[5px] bg-[#fff] shadow-[inset_0_0_4px_0_#9d81d0,0_0_0_1px_#9d81d0] rounded-[3px]">
-        {props.text}
-      </div>
+      <CommentBlock text={props.text} />
       {props.encodedPassword && (
         <FormPasswordBlock
           id="password"
