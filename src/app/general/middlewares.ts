@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs-react';
 import tweetnacl from 'tweetnacl';
 import tweetnaclUtil from 'tweetnacl-util';
-import { tStringObject } from './types';
+import { tReposition, tStringObject } from './types';
 import { tStorageInitialState } from '../storage/storageTypes';
 
 // Scroll to element
@@ -151,4 +151,50 @@ export const alphabetReorder = <T extends tStringObject>(
 // Convert a string first letter upper case and all others to lower case
 export const upperCaseFirst = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
+
+// Repostioning object array blocks
+export const repositionBlocks = <T, K extends keyof T>(
+  blockKey: K,
+  dataBlocks: T[],
+  repositionedBlockId: tReposition['id'],
+  selectedBlock: tReposition,
+) => {
+  let index = 0;
+  const repositionedBlock = { index: 0, data: {} as T };
+  const reorderedData = [] as T[];
+  dataBlocks.forEach((block) => {
+    // storing data of repositioned block
+    if (block[blockKey] === repositionedBlockId) {
+      repositionedBlock.data = block;
+    } else {
+      // the insertion occurs before or after this selected block
+      if (block[blockKey] === selectedBlock.id) {
+        // if repositioned block is wanted to be pushed after the selected block
+        if (selectedBlock.position === 'after') {
+          // selected block push before the repositioned block
+          reorderedData.push(block);
+          // increase index to show the next position of reordered data array
+          index++;
+        }
+        // push an empty block into the new position for repositioned block
+        reorderedData.push({} as T);
+        // store current index of reordered data array for repositioned block
+        repositionedBlock.index = index;
+        // increase index to show the next position of reordered data array
+        index++;
+        // if the insertion occurs after the selected block, goes the next round to avoid pushing selected block into the array again in next steps
+        if (selectedBlock.position === 'after') {
+          return;
+        }
+      }
+      // push blocks into reordered array
+      reorderedData.push(block);
+      // increase index to show the next position of reordered data array
+      index++;
+    }
+  });
+  // insert the repositioned block at its new position
+  reorderedData[repositionedBlock.index] = repositionedBlock.data;
+  return reorderedData;
 };

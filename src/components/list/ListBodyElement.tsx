@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { tCustomConfirm } from '../../app/general/types';
 import {
   tStorageActionTypes,
@@ -8,8 +7,8 @@ import { storageInitialState } from '../../app/storage/storageInitialStates';
 import { useAppContext } from '../core/Context';
 import { storageConfirmDefaultCancel } from '../../app/storage/storageMiddlewares';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-import { VscDebugStepBack, VscDebugStepOver } from 'react-icons/vsc';
 import IconButton from '../general/IconButton';
+import ListRepositionButtons from './ListRepositionButtons';
 
 type tProps = {
   dataBlock: tStorageDataBlock;
@@ -17,68 +16,6 @@ type tProps = {
 
 function ListBodyElement(props: tProps) {
   const { storageState, storageDispatch } = useAppContext();
-  const [buttons, setButtons] = useState<JSX.Element>();
-
-  useEffect(() => {
-    if (storageState.listRepositionBlockId) {
-      if (storageState.listRepositionBlockId === props.dataBlock.id) {
-        setButtons(
-          <IconButton
-            style="hover px-[5px] uppercase text-[#ff0000]"
-            text="cancel"
-            title="Cancel"
-            action={() =>
-              storageDispatch({
-                type: tStorageActionTypes.setListRepositionBlockId,
-                payload: false,
-              })
-            }
-          />,
-        );
-      } else {
-        setButtons(
-          <>
-            <IconButton
-              style="hover"
-              title="Insert before this data block"
-              leftIcon={<VscDebugStepBack />}
-              action={() =>
-                storageDispatch({
-                  type: tStorageActionTypes.setNewListPosition,
-                  payload: { id: props.dataBlock.id, position: 'before' },
-                })
-              }
-            />
-            <IconButton
-              style="hover"
-              title="Insert after this data block"
-              leftIcon={<VscDebugStepOver />}
-              action={() =>
-                storageDispatch({
-                  type: tStorageActionTypes.setNewListPosition,
-                  payload: { id: props.dataBlock.id, position: 'after' },
-                })
-              }
-            />
-          </>,
-        );
-      }
-    } else {
-      setButtons(
-        <IconButton
-          style="hover px-[5px] uppercase"
-          text="reposition"
-          title="Reposition"
-          action={() =>
-            storageDispatch({
-              type: tStorageActionTypes.setListRepositionBlockId,
-              payload: props.dataBlock.id,
-            })
-          }
-        />,
-      );
-    }
-  }, [storageState.listRepositionBlockId]);
 
   const deleteConfirm: tCustomConfirm = {
     text: `Enter your password to delete "${props.dataBlock.title}" block.`,
@@ -153,7 +90,24 @@ function ListBodyElement(props: tProps) {
             }
           />
         </div>
-        <div className="flex flex-wrap gap-[15px]">{buttons}</div>
+        <div className="flex flex-wrap gap-[15px]">
+          <ListRepositionButtons
+            dataId={props.dataBlock.id}
+            selectedId={storageState.listRepositionBlockId}
+            selectAction={(selectedId) =>
+              storageDispatch({
+                type: tStorageActionTypes.setListRepositionBlockId,
+                payload: selectedId,
+              })
+            }
+            repositionAction={(position) =>
+              storageDispatch({
+                type: tStorageActionTypes.setNewListPosition,
+                payload: { id: props.dataBlock.id, position: position },
+              })
+            }
+          />
+        </div>
       </div>
     </div>
   );

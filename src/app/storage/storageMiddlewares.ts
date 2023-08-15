@@ -351,51 +351,6 @@ export const storageFilterList = (
   return results;
 };
 
-// Repostioning a storage data block
-export const storageRepositionDataBlock = (
-  decodedData: tStorageInitialState['decodedData'],
-  repositionedBlockId: tStorageInitialState['listRepositionBlockId'],
-  selectedBlock: tStoragePayload['setNewListPosition'],
-) => {
-  let index = 0;
-  const repositionedBlock = { index: 0, data: {} as tStorageDataBlock };
-  const reorderedData = [];
-  decodedData.forEach((block) => {
-    // storing data of repositioned block
-    if (block.id === repositionedBlockId) {
-      repositionedBlock.data = block;
-    } else {
-      // the insertion occurs before or after this selected block
-      if (block.id === selectedBlock.id) {
-        // if repositioned block is wanted to be pushed after the selected block
-        if (selectedBlock.position === 'after') {
-          // selected block push before the repositioned block
-          reorderedData.push(block);
-          // increase index to show the next position of reordered data array
-          index++;
-        }
-        // push an empty block into the new position for repositioned block
-        reorderedData.push({} as tStorageDataBlock);
-        // store current index of reordered data array for repositioned block
-        repositionedBlock.index = index;
-        // increase index to show the next position of reordered data array
-        index++;
-        // if the insertion occurs after the selected block, goes the next round to avoid pushing selected block into the array again in next steps
-        if (selectedBlock.position === 'after') {
-          return;
-        }
-      }
-      // push blocks into reordered array
-      reorderedData.push(block);
-      // increase index to show the next position of reordered data array
-      index++;
-    }
-  });
-  // insert the repositioned block at its new position
-  reorderedData[repositionedBlock.index] = repositionedBlock.data;
-  return reorderedData;
-};
-
 // Storage confirm default cancel
 export const storageConfirmDefaultCancel = (
   storageDispatch: React.Dispatch<tStorageActions>,

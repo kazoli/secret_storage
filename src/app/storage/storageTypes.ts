@@ -1,4 +1,9 @@
-import { tActionMap, tCustomConfirm, tDropDownOption } from '../general/types';
+import {
+  tActionMap,
+  tCustomConfirm,
+  tDropDownOption,
+  tReposition,
+} from '../general/types';
 
 // Type of storage data block
 export type tStorageDataBlock = {
@@ -74,10 +79,7 @@ export type tStoragePayload = {
   [tStorageActionTypes.setView]: tStorageInitialState['view'];
   [tStorageActionTypes.setListRepositionBlockId]: tStorageInitialState['listRepositionBlockId'];
   [tStorageActionTypes.setListOrderEditor]: tStorageInitialState['listOrderEditor'];
-  [tStorageActionTypes.setNewListPosition]: {
-    id: tStorageDataBlock['id'];
-    position: 'before' | 'after';
-  };
+  [tStorageActionTypes.setNewListPosition]: tReposition;
   [tStorageActionTypes.setDataBlockEditor]: tStorageInitialState['dataBlockEditor'];
   [tStorageActionTypes.setDataBlock]: tStorageDataBlock;
   [tStorageActionTypes.setCustomConfirm]: tStorageInitialState['customConfirm'];

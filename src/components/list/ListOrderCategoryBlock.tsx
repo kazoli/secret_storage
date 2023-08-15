@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { tReposition } from '../../app/general/types';
 import { tStorageInitialState } from '../../app/storage/storageTypes';
+import { repositionBlocks } from '../../app/general/middlewares';
 import { storageCategories } from '../../app/storage/storageMiddlewares';
 import { useAppContext } from '../core/Context';
-import { GiMove } from 'react-icons/gi';
+import ListRepositionButtons from './ListRepositionButtons';
 
 type tProps = {
   visible: boolean;
@@ -13,10 +15,22 @@ function ListOrderCategoryBlock(props: tProps) {
   const [categories, setCategories] = useState<
     tStorageInitialState['categories']
   >([]);
+  const [selectedId, setSelectedId] = useState<tReposition['id'] | false>(
+    false,
+  );
 
   useEffect(() => {
     setCategories(storageCategories(storageState.decodedData, false));
   }, [storageState.decodedData]);
+
+  const reposition = (selectedBlock: tReposition) => {
+    if (selectedId !== false) {
+      setCategories(
+        repositionBlocks('key', categories, selectedId, selectedBlock),
+      );
+      setSelectedId(false);
+    }
+  };
 
   return (
     props.visible && (
@@ -26,7 +40,14 @@ function ListOrderCategoryBlock(props: tProps) {
             key={category.key}
             className="flex items-center gap-[5px] bg-[#fff] border border-[#d0d0d0] rounded-[3px] p-[5px]"
           >
-            <GiMove className="icon-button hover" />
+            <ListRepositionButtons
+              dataId={`${category.key}`}
+              selectedId={selectedId}
+              selectAction={setSelectedId}
+              repositionAction={(position) =>
+                reposition({ id: `${category.key}`, position })
+              }
+            />
             {category.value}
           </span>
         ))}

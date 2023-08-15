@@ -27,6 +27,12 @@ export type tSelect = {
   options: tDropDownOption[];
 };
 
+// General type of reposition data
+export type tReposition = {
+  id: string;
+  position: 'before' | 'after';
+};
+
 // General type to returning content of file read
 export type tFileContent = string | ArrayBuffer | null;
 

@@ -1,14 +1,12 @@
+import { tReposition } from '../general/types';
 import {
   tStorageActionTypes,
   tStorageActions,
   tStorageInitialState,
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
-import { setLocalStorage } from '../general/middlewares';
-import {
-  storageCategorySelect,
-  storageRepositionDataBlock,
-} from './storageMiddlewares';
+import { setLocalStorage, repositionBlocks } from '../general/middlewares';
+import { storageCategorySelect } from './storageMiddlewares';
 import { v4 as uuidV4 } from 'uuid';
 
 // Storage reducer
@@ -84,7 +82,7 @@ export const storageReducer = (
     case tStorageActionTypes.setKeywords:
       state = {
         ...state,
-        listRepositionBlockId: false,
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
         keywords: action.payload,
       };
       return state;
@@ -93,7 +91,7 @@ export const storageReducer = (
     case tStorageActionTypes.setSelectedCategory:
       state = {
         ...state,
-        listRepositionBlockId: false,
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
         selectedCategory: action.payload,
       };
       return state;
@@ -136,10 +134,11 @@ export const storageReducer = (
       state = {
         ...state,
         exportAvailable: true,
-        listRepositionBlockId: false,
-        decodedData: storageRepositionDataBlock(
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
+        decodedData: repositionBlocks(
+          'id',
           state.decodedData,
-          state.listRepositionBlockId,
+          state.listRepositionBlockId as tReposition['id'],
           action.payload,
         ),
       };
@@ -149,7 +148,7 @@ export const storageReducer = (
     case tStorageActionTypes.setDataBlockEditor:
       state = {
         ...state,
-        listRepositionBlockId: false,
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
         dataBlockEditor: action.payload,
       };
       return state;
