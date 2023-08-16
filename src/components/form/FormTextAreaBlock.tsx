@@ -33,7 +33,7 @@ function FormTextAreaBlock(props: tProps) {
         />
       )}
       <TextareaAutosize
-        className={`w-[100%] rounded-[3px] border border-[#d0d0d0] focus:shadow-[0_0_3px_0_#d0d0d0] rounded-[2px] p-[5px] ${
+        className={`w-[100%] rounded-[3px] shadow-[0_0_0_1px_#d0d0d0] focus:shadow-[inset_0_0_0_1px_#d0d0d0,0_0_3px_0_#c0c0c0] rounded-[2px] p-[5px] ${
           props.textareaStyle ?? ''
         }`}
         placeholder={props.placeholder}

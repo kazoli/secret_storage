@@ -131,6 +131,11 @@ export const tweetNaClDecryptData = (
   return JSON.parse(decryptedData);
 };
 
+// Convert a string first letter upper case and all others to lower case
+export const upperCaseFirst = (text: string) => {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
+
 // General alphabetic reorder
 export const alphabetReorder = <T extends tStringObject>(
   array: T[],
@@ -148,14 +153,9 @@ export const alphabetReorder = <T extends tStringObject>(
     : sortedArray.sort((a, b) => sorting(b, a));
 };
 
-// Convert a string first letter upper case and all others to lower case
-export const upperCaseFirst = (text: string) => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-};
-
 // Repostioning object array blocks
-export const repositionBlocks = <T, K extends keyof T>(
-  blockKey: K,
+export const repositionBlocks = <T>(
+  blockKey: keyof T,
   dataBlocks: T[],
   repositionedBlockId: tReposition['id'],
   selectedBlock: tReposition,

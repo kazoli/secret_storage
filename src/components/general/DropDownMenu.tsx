@@ -3,6 +3,7 @@ import { tDropDownOption } from '../../app/general/types';
 
 type tProps = {
   classContainer: string;
+  classTrigger: string;
   classList: string;
   classElement: string;
   selected: string | JSX.Element;
@@ -31,10 +32,10 @@ function DropDownMenu(props: tProps) {
   }, []);
 
   return (
-    <div className={props.classContainer}>
+    <div className={`relative ${props.classContainer}`}>
       <button
         ref={dropDownRef}
-        className="block w-[100%] text-left"
+        className={`block ${props.classTrigger}`}
         onClick={() => setShowDropDown(!showDropDown)}
       >
         {props.selected}
@@ -42,14 +43,14 @@ function DropDownMenu(props: tProps) {
       <ul
         className={`${
           showDropDown ? '' : 'hidden'
-        } absolute scroll-bar max-h-[50vh] overflow-y-auto p-[2px] ml-[-2px] z-[2] ${
+        } absolute scroll-bar max-h-[50vh] overflow-y-auto z-[2] ${
           props.classList
         }`}
       >
         {props.options.map((element) => (
           <li
             key={element.key}
-            className={props.classElement}
+            className={`bg-[#fff] ${props.classElement}`}
             onClick={() => props.action(element.key)}
           >
             {element.value}

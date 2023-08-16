@@ -1,11 +1,10 @@
-import { tReposition } from '../general/types';
 import {
   tStorageActionTypes,
   tStorageActions,
   tStorageInitialState,
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
-import { setLocalStorage, repositionBlocks } from '../general/middlewares';
+import { setLocalStorage } from '../general/middlewares';
 import { storageCategorySelect } from './storageMiddlewares';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -125,22 +124,19 @@ export const storageReducer = (
     case tStorageActionTypes.setListOrderEditor:
       state = {
         ...state,
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
         listOrderEditor: action.payload,
       };
       return state;
 
     // set block into new list position
-    case tStorageActionTypes.setNewListPosition:
+    case tStorageActionTypes.setReorderedList:
       state = {
         ...state,
         exportAvailable: true,
         listRepositionBlockId: storageInitialState.listRepositionBlockId,
-        decodedData: repositionBlocks(
-          'id',
-          state.decodedData,
-          state.listRepositionBlockId as tReposition['id'],
-          action.payload,
-        ),
+        listOrderEditor: storageInitialState.listOrderEditor,
+        decodedData: action.payload,
       };
       return state;
 

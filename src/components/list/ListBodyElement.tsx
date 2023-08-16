@@ -1,11 +1,12 @@
-import { tCustomConfirm } from '../../app/general/types';
+import { tCustomConfirm, tReposition } from '../../app/general/types';
 import {
   tStorageActionTypes,
   tStorageDataBlock,
 } from '../../app/storage/storageTypes';
 import { storageInitialState } from '../../app/storage/storageInitialStates';
-import { useAppContext } from '../core/Context';
+import { repositionBlocks } from '../../app/general/middlewares';
 import { storageConfirmDefaultCancel } from '../../app/storage/storageMiddlewares';
+import { useAppContext } from '../core/Context';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import IconButton from '../general/IconButton';
 import ListRepositionButtons from './ListRepositionButtons';
@@ -36,6 +37,18 @@ function ListBodyElement(props: tProps) {
       },
     },
     cancel: storageConfirmDefaultCancel(storageDispatch),
+  };
+
+  const repositionAction = (position: tReposition['position']) => {
+    storageDispatch({
+      type: tStorageActionTypes.setReorderedList,
+      payload: repositionBlocks(
+        'id',
+        storageState.decodedData,
+        storageState.listRepositionBlockId as tReposition['id'],
+        { id: props.dataBlock.id, position: position },
+      ),
+    });
   };
 
   return (
@@ -100,12 +113,7 @@ function ListBodyElement(props: tProps) {
                 payload: selectedId,
               })
             }
-            repositionAction={(position) =>
-              storageDispatch({
-                type: tStorageActionTypes.setNewListPosition,
-                payload: { id: props.dataBlock.id, position: position },
-              })
-            }
+            repositionAction={repositionAction}
           />
         </div>
       </div>

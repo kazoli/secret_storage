@@ -77,7 +77,8 @@ function HeaderMenu(props: tProps) {
         <HiOutlineMenu className="text-[2rem] cursor-pointer outline-none" />
       }
       classContainer="relative"
-      classList={`${props.hide ? '!hidden' : ''} right-0 whitespace-nowrap`}
+      classTrigger=""
+      classList={`${props.hide ? '!hidden' : ''} right-0 w-[max-content]`}
       classElement="transition-custom block cursor-pointer mt-[5px] p-[5px_10px] bg-[#ffffff] shadow-[inset_0_0_5px_0_#777] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] border border-[#777] hover:border-[#8563c5] rounded-[3px]"
       options={options}
       action={action}
