@@ -5,6 +5,7 @@ export default {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
   ],
+  ignorePatterns: ['build', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   plugins: ['react-refresh'],

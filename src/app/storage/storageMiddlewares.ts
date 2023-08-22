@@ -8,7 +8,7 @@ import {
 } from './storageTypes';
 import { storageInitialState, storageSettings } from './storageInitialStates';
 import {
-  alphabetReorder,
+  arrayReorder,
   bcryptCompare,
   bcryptHash,
   tweetNaClDecryptData,
@@ -249,9 +249,10 @@ export const storageCategorySelect = (
   // if new categories has at least an element
   if (categories.length) {
     // sorting categories in ascending order
-    categories = alphabetReorder(
+    categories = arrayReorder(
       categories as tStringObject[],
       'key',
+      'asc',
     ) as tStorageInitialState['categories'];
   }
   // adding initial values to the start of sorted array

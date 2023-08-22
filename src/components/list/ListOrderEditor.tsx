@@ -5,7 +5,7 @@ import {
   tStorageDataBlock,
   tStorageInitialState,
 } from '../../app/storage/storageTypes';
-import { alphabetReorder } from '../../app/general/middlewares';
+import { arrayReorder } from '../../app/general/middlewares';
 import { storageCategories } from '../../app/storage/storageMiddlewares';
 import { useAppContext } from '../core/Context';
 import PopUp from '../general/PopUp';
@@ -47,7 +47,7 @@ function ListOrderEditor() {
       value: 'Category (Z-A)',
     },
     {
-      key: 'categoryCustom',
+      key: 'category-custom',
       value: 'Category (My own order)',
     },
   ];
@@ -59,26 +59,18 @@ function ListOrderEditor() {
         payload: false,
       });
     } else {
-      let reorderedData = [];
-      const splittedOrder = order.toString().split('-');
-      if (splittedOrder[1]) {
-        reorderedData = alphabetReorder(
-          storageState.decodedData,
-          splittedOrder[0] as keyof tStorageDataBlock,
-          splittedOrder[1] === 'asc',
-        );
-      } else {
-        // TODO order by categories
-        reorderedData = alphabetReorder(
-          storageState.decodedData,
-          splittedOrder[0] as keyof tStorageDataBlock,
-          splittedOrder[1] === 'asc',
-        );
-        console.log(reorderedData); // TODO
+      let key: string, ordering: string | tDropDownOption['key'][];
+      [key, ordering] = order.toString().split('-');
+      if (key === 'category' && ordering === 'custom') {
+        ordering = categories.map((category) => category.key);
       }
       storageDispatch({
         type: tStorageActionTypes.setReorderedList,
-        payload: reorderedData,
+        payload: arrayReorder(
+          storageState.decodedData,
+          key as keyof tStorageDataBlock,
+          ordering,
+        ),
       });
     }
   };
@@ -107,7 +99,7 @@ function ListOrderEditor() {
         action={(value) => setOrder(value)}
       />
       <ListOrderCategoryBlock
-        visible={order === 'categoryCustom'}
+        visible={order === 'category-custom'}
         categories={categories}
         setCategories={setCategories}
       />

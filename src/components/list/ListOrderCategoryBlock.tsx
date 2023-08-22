@@ -28,7 +28,7 @@ function ListOrderCategoryBlock(props: tProps) {
 
   return (
     props.visible && (
-      <div className="mt-[15px] grid sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-[15px]">
+      <div className="mt-[15px] grid sm:grid-cols-[repeat(auto-fill,minmax(265px,1fr))] gap-[15px]">
         {props.categories.map((category) => {
           const categoryKey = category.key.toString();
           return (

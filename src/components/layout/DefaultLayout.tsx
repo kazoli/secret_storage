@@ -24,7 +24,7 @@ function DefaultLayout(props: tProps) {
     <>
       {props.loading && <Loading />}
       <Header />
-      <main className="content-positioner py-[20px] sm:py-[50px]">
+      <main className="content-positioner py-[20px] sm:py-[50px] min-h-[100vh]">
         {props.children}
       </main>
       <Footer />

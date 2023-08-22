@@ -10,10 +10,6 @@
   * {
     @apply text-[1rem] break-words min-w-[0] focus-visible:outline-none focus:outline-none;
   }
-
-  main {
-    @apply min-h-[100vh];
-  }
 }
 
 @layer utilities {
