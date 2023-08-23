@@ -6,8 +6,17 @@ function JumpTop() {
   const [jumpTop, setJumpTop] = useState(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', () => setJumpTop(window.scrollY > 200));
-  }, []);
+    // scroll handling function
+    const handleScroll = () => {
+      const overLimit = window.scrollY > 200;
+      // triggers setJumpTop only when previous value is changing
+      overLimit !== jumpTop && setJumpTop(overLimit);
+    };
+    // event listener
+    window.addEventListener('scroll', handleScroll);
+    // cleanup function
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [jumpTop]);
 
   return (
     <>
