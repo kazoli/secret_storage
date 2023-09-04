@@ -34,11 +34,10 @@ function ListFilterTopBlock() {
   const resetList = () => {
     // reset keywords if differs from initial state
     if (storageState.keywords !== storageInitialState.keywords) {
-      // reset local value too by clearing search field with clear button
-      const listClearKeywordsButton = document.getElementById(
-        'list-clear-keywords-button',
-      );
-      listClearKeywordsButton && listClearKeywordsButton.click();
+      storageDispatch({
+        type: tStorageActionTypes.setKeywords,
+        payload: storageInitialState.keywords,
+      });
     }
     // reset search type if differs from initial state
     if (storageState.searchType !== storageInitialState.searchType) {
@@ -48,8 +47,11 @@ function ListFilterTopBlock() {
       });
     }
     // reset selected category if differs from initial state
-    storageState.selectedCategory !== storageInitialState.selectedCategory &&
+    if (
+      storageState.selectedCategory !== storageInitialState.selectedCategory
+    ) {
       setSelectedCategory(storageInitialState.selectedCategory);
+    }
   };
 
   const setSelectedCategory = (value: tDropDownOption['key']) => {

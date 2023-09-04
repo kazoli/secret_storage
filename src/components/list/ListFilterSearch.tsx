@@ -15,6 +15,10 @@ function ListFilterSearch() {
   const [keywords, setKeywords] = useState('');
 
   useEffect(() => {
+    setKeywords(storageState.keywords);
+  }, [storageState.keywords]);
+
+  useEffect(() => {
     // delay 500 ms during typing
     const timerId = setTimeout(
       () =>
@@ -39,7 +43,6 @@ function ListFilterSearch() {
           onChange={(e) => setKeywords(e.target.value)}
         />
         <IconButton
-          id="list-clear-keywords-button"
           style="hover"
           title="Clear text"
           leftIcon={<MdClear />}
