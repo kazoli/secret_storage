@@ -329,6 +329,8 @@ export const storageFilterList = (
       (dataBlock) => dataBlock.category === selectedCategory,
     );
   }
+  // remove white spaces
+  keywords = keywords.trim();
   if (/\S/.test(keywords)) {
     const splittedKeywords = keywords.split(' ');
     // filter the array based on the specified filterBy value

@@ -24,7 +24,7 @@ function ListFilterSearch() {
       () =>
         storageDispatch({
           type: tStorageActionTypes.setKeywords,
-          payload: keywords.trim(), // remove whitespaces
+          payload: keywords,
         }),
       keywords.length ? 500 : 0,
     );
