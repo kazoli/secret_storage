@@ -18,7 +18,7 @@ const FormInputBlock = (props: tProps) => {
       )}
       <div className="relative flex-[1_1_auto]">
         <input
-          className={`w-[100%] shadow-[0_0_0_1px_#d0d0d0] focus:shadow-[inset_0_0_0_1px_#d0d0d0,0_0_3px_0_#c0c0c0] rounded-[3px] p-[5px] ${
+          className={`w-[100%] bg-[#fff] shadow-[0_0_0_1px_#d0d0d0] focus:shadow-[inset_0_0_0_1px_#d0d0d0,0_0_3px_0_#c0c0c0] rounded-[3px] p-[5px] ${
             props.inputStyle ?? ''
           }`}
           id={props.id}

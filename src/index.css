@@ -6,10 +6,6 @@
     @apply text-[16px] min-w-[320px] text-[#303030];
   }
 
-  body {
-    @apply m-[0] p-[0];
-  }
-
   * {
     @apply text-[1rem] break-words min-w-[0] focus-visible:outline-none focus:outline-none;
   }
