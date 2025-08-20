@@ -8,7 +8,7 @@ import ListOrderEditor from '../../components/list/ListOrderEditor';
 import ListExportButton from '../../components/list/ListExportButton';
 import ListFilterTopBlock from '../../components/list/ListFilterTopBlock';
 import ListBody from '../../components/list/ListBody';
-import { useAppContext } from '../../utils';
+import { tRouteNames, useAppContext } from '../../utils';
 
 const List = () => {
   useEffect(() => {
@@ -20,7 +20,7 @@ const List = () => {
 
   useEffect(() => {
     if (!storageState.loggedIn) {
-      navigate('/login');
+      navigate(tRouteNames.LOGIN);
     }
   }, [storageState.loggedIn, navigate]);
 

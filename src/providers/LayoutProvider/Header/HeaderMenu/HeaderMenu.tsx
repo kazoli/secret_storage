@@ -6,6 +6,7 @@ import {
   storageExportConfirm,
   tCustomConfirm,
   tDropDownOption,
+  tRouteNames,
   tStorageActionTypes,
   useAppContext,
 } from '../../../../utils';
@@ -41,7 +42,7 @@ const HeaderMenu = (props: tProps) => {
   const action = (value: tDropDownOption['key']) => {
     switch (value) {
       case 'logIn':
-        navigate('/login');
+        navigate(tRouteNames.LOGIN);
         break;
       case 'logOut':
         if (storageState.exportAvailable) {
@@ -54,7 +55,7 @@ const HeaderMenu = (props: tProps) => {
         }
         break;
       case 'changePassword':
-        navigate('/change-password');
+        navigate(tRouteNames.CHANGE_PASSWORD);
         break;
       case 'exportAvailable':
         storageDispatch({
@@ -68,7 +69,7 @@ const HeaderMenu = (props: tProps) => {
         });
         break;
       default:
-        navigate('/');
+        navigate(tRouteNames.HOME);
     }
   };
 

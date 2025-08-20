@@ -9,6 +9,7 @@ import {
   bcryptHash,
   storageChangePasswordValidate,
   storageSettings,
+  tRouteNames,
   tStorageActionTypes,
   useAppContext,
 } from '../../utils';
@@ -23,7 +24,7 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (!storageState.loggedIn) {
-      navigate('/login');
+      navigate(tRouteNames.LOGIN);
     }
   }, [storageState.loggedIn, navigate]);
 
@@ -68,7 +69,7 @@ const ChangePassword = () => {
             type: tStorageActionTypes.changePassword,
             payload: hashedPassword,
           });
-          navigate('/');
+          navigate(tRouteNames.HOME);
         });
       }
     });
@@ -78,7 +79,7 @@ const ChangePassword = () => {
     // prevent default submit if submit by enter on input
     event && event.preventDefault();
     // navigate back to list
-    navigate('/');
+    navigate(tRouteNames.HOME);
   };
 
   const buttons = [

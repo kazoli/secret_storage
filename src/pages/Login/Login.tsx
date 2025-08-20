@@ -10,6 +10,7 @@ import {
   storageProcessFile,
   storageSettings,
   tFileContent,
+  tRouteNames,
   useAppContext,
 } from '../../utils';
 
@@ -23,7 +24,7 @@ const Login = () => {
 
   useEffect(() => {
     if (storageState.loggedIn) {
-      navigate('/');
+      navigate(tRouteNames.HOME);
     }
   }, [storageState.loggedIn, navigate]);
 

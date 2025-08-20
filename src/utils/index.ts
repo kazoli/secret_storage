@@ -1,3 +1,4 @@
 export * from './general';
 export * from './storage';
-export { useCustomContext as useAppContext } from '../providers/ContextProvider/utils';
+export { useAppContext } from '../providers/ContextProvider/utils';
+export { tRouteNames } from '../providers/RouterProvider/types';

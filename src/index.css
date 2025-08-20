@@ -1,10 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer base {
   html {
-    @apply font-sans text-[16px] min-w-[320px] text-[#303030];
+    font-family: ui-sans-serif, system-ui;
+    @apply text-[16px] min-w-[320px] text-[#303030];
+  }
+
+  body {
+    @apply m-[0] p-[0];
   }
 
   * {
@@ -24,11 +27,11 @@
 
 @layer components {
   .password-icon {
-    @apply p-[2px] text-[1.5rem] absolute top-[50%] translate-y-[-50%] right-[5px] cursor-pointer shadow-[inset_0_0_3px_1px_#a7a7a7] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-custom rounded-[3px];
+    @apply p-[2px] text-[1.5rem] absolute top-[50%] translate-y-[-50%] right-[5px] cursor-pointer shadow-[inset_0_0_3px_1px_#a7a7a7] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-all duration-300 rounded-[3px];
   }
 
   .icon-button {
-    @apply p-[2px] flex items-center min-w-[1.5rem] h-[1.5rem] justify-center cursor-pointer bg-[#fff] shadow-[inset_0_0_3px_1px_#a7a7a7] border border-[#c0c0c0] transition-custom rounded-[3px];
+    @apply p-[2px] flex items-center min-w-[1.5rem] h-[1.5rem] justify-center cursor-pointer bg-[#fff] shadow-[inset_0_0_3px_1px_#a7a7a7] border border-[#c0c0c0] transition-all duration-300 rounded-[3px];
   }
 
   .icon-button.hover {
@@ -40,7 +43,7 @@
   }
 
   .form-button {
-    @apply transition-custom cursor-pointer p-[5px_10px] bg-[#fff] shadow-[inset_0_0_3px_1px_#909090] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] rounded-[3px];
+    @apply transition-all duration-300 cursor-pointer p-[5px_10px] bg-[#fff] shadow-[inset_0_0_3px_1px_#909090] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] rounded-[3px];
   }
 
   .list-element {
@@ -48,12 +51,12 @@
   }
 
   .list-element.button {
-    @apply hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-custom;
+    @apply hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] transition-all duration-300;
   }
 
   /* webkit start */
   .scroll-bar::-webkit-scrollbar {
-    @apply sm:w-[5px] w-[3px];
+    @apply w-[3px] sm:w-[5px];
   }
 
   .scroll-bar::-webkit-scrollbar-track {

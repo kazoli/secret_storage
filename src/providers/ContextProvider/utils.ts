@@ -16,4 +16,4 @@ export const useGetContextValues = () => {
 };
 
 // Context custom hook
-export const useCustomContext = () => useContext(Context);
+export const useAppContext = () => useContext(Context);
