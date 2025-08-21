@@ -11,8 +11,8 @@ const RouterProvider = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route index path={tRouteNames.LOGIN} element={<Login />} />
         <Route path={tRouteNames.HOME} element={<List />} />
-        <Route path={tRouteNames.LOGIN} element={<Login />} />
         <Route
           path={tRouteNames.CHANGE_PASSWORD}
           element={<ChangePassword />}

@@ -11,7 +11,7 @@ const NotFound = () => {
   return (
     <LayoutProvider>
       <div className="flex flex-wrap">
-        <h1 className="w-full text-[2rem]">Requested page is not found!</h1>
+        <h1 className="w-full text-[2rem]">Requested page cannot be found!</h1>
         <Link to="/" className="text-[#0000ff] text-[1.25rem] hover:underline">
           Go back to main page
         </Link>
