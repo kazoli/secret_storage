@@ -1,4 +1,10 @@
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import { useState } from 'react';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from 'react-icons/ai';
 
 import {
   repositionBlocks,
@@ -15,6 +21,7 @@ import { tProps } from './types';
 
 const ListBodyElement = (props: tProps) => {
   const { storageState, storageDispatch } = useAppContext();
+  const [show, setShow] = useState(false);
 
   const deleteConfirm: tCustomConfirm = {
     text: `Enter your password to delete "${props.dataBlock.title}" block.`,
@@ -74,10 +81,25 @@ const ListBodyElement = (props: tProps) => {
         </span>
       </div>
       <div className="p-[10px] flex-[1_1_auto] whitespace-pre-line w-full">
-        {props.dataBlock.data}
+        {show ? (
+          props.dataBlock.data
+        ) : (
+          <span
+            onClick={() => setShow(!show)}
+            className="text-[#0000ff] hover:underline cursor-pointer"
+          >
+            Show
+          </span>
+        )}
       </div>
       <div className="flex flex-wrap justify-between gap-[15px] p-[10px] bg-[#f7f7f7] shadow-[inset_0_0_15px_0_#d0d0d0] rounded-[0_0_3px_3px] w-full">
         <div className="flex flex-wrap gap-[15px]">
+          <IconButton
+            style="hover"
+            title="Show data"
+            leftIcon={show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            action={() => setShow(!show)}
+          />
           <IconButton
             style="hover"
             title="Edit data"
