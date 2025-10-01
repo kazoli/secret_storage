@@ -13,7 +13,7 @@ Only frontend based codes, no backend or any data movement outside your browser.
 2. In case of a selected file, log in and decoding can be possible with the password of encoded data.
 3. In case of a new file, entered password becomes the valid one to every operation.
 4. Every time the data or password have been changed, you need to export the data to store into the encoded file. Export button will appear in the bottom right corner or always available in top right menu.
-5. Password is necessary to add, modifiy or remove a data block, to no one can change or overwrite your data if you left your computer unattended.
+5. Password is necessary to add, modify or remove a data block, to no one can change or overwrite your data if you left your computer unattended. Password is not necessary to view a data block.
 6. Password cannot be pasted into any of the password fields for security reasons. (If you better like that if passwords can be pasted everywhere, change the value of "onPaste" to true in src/components/form/FormPasswordBlock.tsx. Rebuild or compilation needed to work accordingly.)
 7. Password can be modified.
 8. Data stored in title and content divided blocks.
