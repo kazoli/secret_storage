@@ -96,7 +96,7 @@ const ListBodyElement = (props: tProps) => {
         <div className="flex flex-wrap gap-[15px]">
           <IconButton
             style="hover"
-            title="Show data"
+            title={show ? 'Hide data' : 'Show data'}
             leftIcon={show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             action={() => setShow(!show)}
           />

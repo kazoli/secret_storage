@@ -40,7 +40,7 @@ Only frontend based codes, no backend or any data movement outside your browser.
 
 # BUILD A SERVERLESS PRODUCTION
 
-1. Change "BrowserRouter" to "HashRouter" in this file: src/components/core/Router.tsx
+1. Change "BrowserRouter" to "HashRouter" in this file: src/providers/RouterProvider/RouterProvider.tsx
 2. Use a command line, enter in the main folder and run this command: "npm run sls-build"
 3. In main folder a "build" subfolder will be created
 4. Enter into the "build" subfolder and click twice on index.html and it will work
