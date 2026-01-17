@@ -1,9 +1,12 @@
 import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
+import reactHooks from 'eslint-plugin-react-hooks';
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
 
 export default [
+  // enable react-hooks recommended (flat) rules
+  reactHooks.configs.flat.recommended,
   {
     // languageOptions replaces top-level parser and parserOptions in flat config
     languageOptions: {
