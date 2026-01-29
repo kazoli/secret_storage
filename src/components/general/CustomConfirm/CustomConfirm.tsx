@@ -1,12 +1,18 @@
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
-import { bcryptCompare, storageSettings, tCustomConfirm } from '../../../utils';
+import { defaultMessages } from '../../../providers/TranslationProvider';
+import { bcryptCompare, tCustomConfirm } from '../../../utils';
+
 import FormPasswordBlock from '../../form/FormPasswordBlock';
 import FormButtonBlock from '../../form/FormButtonBlock';
+
 import PopUp from '../PopUp';
 import CommentBlock from '../CommentBlock';
 
 const CustomConfirm = (props: tCustomConfirm) => {
+  const translate = useIntl().formatMessage;
+
   const [formData, setFormData] = useState({
     password: '',
     passwordError: '',
@@ -21,7 +27,7 @@ const CustomConfirm = (props: tCustomConfirm) => {
         } else {
           setFormData({
             ...formData,
-            passwordError: storageSettings.passwordCheckError,
+            passwordError: translate(defaultMessages.common.passwordCheckError),
           });
         }
         props.setLoading && props.setLoading(false);
@@ -48,7 +54,7 @@ const CustomConfirm = (props: tCustomConfirm) => {
       {props.encodedPassword && (
         <FormPasswordBlock
           id="password"
-          placeholder="Password"
+          placeholder={translate(defaultMessages.common.password)}
           password={formData.password}
           passwordError={formData.passwordError}
           action={(value) => setFormData({ ...formData, password: value })}

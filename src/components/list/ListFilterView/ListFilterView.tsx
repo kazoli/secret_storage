@@ -1,16 +1,20 @@
+import { useIntl } from 'react-intl';
 import { TfiLayoutGrid2, TfiViewList } from 'react-icons/tfi';
 
+import { defaultMessages } from '../../../providers/TranslationProvider';
 import { tStorageActionTypes, useAppContext } from '../../../utils';
+
 import IconButton from '../../general/IconButton';
 
 const ListFilterView = () => {
+  const translate = useIntl().formatMessage;
   const { storageState, storageDispatch } = useAppContext();
 
   return (
     <div className="list-element">
       <IconButton
         style={storageState.view === 'grid' ? 'highlighted' : ''}
-        title="Grid view"
+        title={translate(defaultMessages.list.gridViewButton)}
         leftIcon={<TfiLayoutGrid2 />}
         action={() =>
           storageDispatch({
@@ -21,7 +25,7 @@ const ListFilterView = () => {
       />
       <IconButton
         style={storageState.view === 'list' ? 'highlighted' : ''}
-        title="List view"
+        title={translate(defaultMessages.list.listViewButton)}
         leftIcon={<TfiViewList />}
         action={() =>
           storageDispatch({

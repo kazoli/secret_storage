@@ -1,11 +1,14 @@
+import { IntlShape } from 'react-intl';
 import validator from 'validator';
+import { defaultMessages } from '../../providers/TranslationProvider';
 
 // Validate the password is strong enough
 export const validatePassword = (
-  element: string,
+  getElement: () => string,
   value: string,
   minLength: number,
   maxLength: number,
+  translate: IntlShape['formatMessage'],
 ) => {
   const result =
     value.length <= maxLength &&
@@ -19,25 +22,34 @@ export const validatePassword = (
     });
   return result
     ? ''
-    : `${element} needs to be between ${minLength} and ${maxLength} characters long and contains at least a lower and upper case letter and a number`;
+    : translate(defaultMessages.common.passwordFormError, {
+        element: getElement(),
+        minLength,
+        maxLength,
+      });
 };
 
-// Validate data input field
-export const validateInput = (
-  element: string,
+// Validate data input field length
+export const validateInputLength = (
+  getElement: () => string,
   value: string,
   minLength: number,
   maxLength: number,
+  translate: IntlShape['formatMessage'],
 ) => {
   const length = value.length;
   return length >= minLength && length <= maxLength
     ? ''
-    : `${element} needs to be between ${minLength} and ${maxLength} characters long`;
+    : translate(defaultMessages.common.inputLengthError, {
+        element: getElement(),
+        minLength,
+        maxLength,
+      });
 };
 
 const validations = {
   validatePassword,
-  validateInput,
+  validateInputLength,
 };
 
 export default validations;

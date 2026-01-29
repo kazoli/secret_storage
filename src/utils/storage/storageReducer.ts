@@ -1,12 +1,13 @@
+import { v4 as uuidV4 } from 'uuid';
+
+import { setLocalStorage } from '../general/middlewares';
+
+import { storageInitialState, storageSettings } from './storageInitialStates';
 import {
   tStorageActionTypes,
   tStorageActions,
   tStorageInitialState,
 } from './storageTypes';
-import { storageInitialState, storageSettings } from './storageInitialStates';
-import { setLocalStorage } from '../general/middlewares';
-import { storageCategorySelect } from './storageMiddlewares';
-import { v4 as uuidV4 } from 'uuid';
 
 // Storage reducer
 export const storageReducer = (
@@ -38,7 +39,6 @@ export const storageReducer = (
         status: storageInitialState.status,
         encodedPassword: action.payload.encodedPassword,
         encodedData: action.payload.encodedData,
-        categories: action.payload.categories,
         decodedData: action.payload.decodedData,
         loggedIn: !action.payload.encodedData,
       };
@@ -86,12 +86,31 @@ export const storageReducer = (
       };
       return state;
 
-    // set category
+    // set selected category
     case tStorageActionTypes.setSelectedCategory:
       state = {
         ...state,
         listRepositionBlockId: storageInitialState.listRepositionBlockId,
         selectedCategory: action.payload,
+      };
+      return state;
+
+    // set categories
+    case tStorageActionTypes.setCategories:
+      state = {
+        ...state,
+        listRepositionBlockId: storageInitialState.listRepositionBlockId,
+        updateCategories: false,
+        selectedCategory: action.payload.selectedCategory,
+        categories: action.payload.categories,
+      };
+      return state;
+
+    // reset categories
+    case tStorageActionTypes.resetCategories:
+      state = {
+        ...state,
+        updateCategories: true,
       };
       return state;
 
@@ -156,17 +175,12 @@ export const storageReducer = (
             data.id === action.payload.id ? action.payload : data,
           )
         : [{ ...action.payload, id: uuidV4() }, ...state.decodedData];
-      const newCategoryData = storageCategorySelect(
-        newDecodedData,
-        state.selectedCategory,
-      );
       state = {
         ...state,
         status: storageInitialState.status,
         dataBlockEditor: storageInitialState.dataBlockEditor,
         exportAvailable: true,
-        selectedCategory: newCategoryData.selectedCategory,
-        categories: newCategoryData.categories,
+        updateCategories: true,
         decodedData: newDecodedData,
       };
       return state;
@@ -177,23 +191,18 @@ export const storageReducer = (
       const remainedDecodedData = state.decodedData.filter(
         (data) => data.id !== action.payload,
       );
-      const remainedCategoryData = storageCategorySelect(
-        remainedDecodedData,
-        state.selectedCategory,
-      );
       state = {
         ...state,
         customConfirm: storageInitialState.customConfirm,
         exportAvailable: true,
-        selectedCategory: remainedCategoryData.selectedCategory,
-        categories: remainedCategoryData.categories,
+        updateCategories: true,
         decodedData: remainedDecodedData,
       };
       return state;
     }
 
     // set the export unavailable
-    case tStorageActionTypes.setExportUnavailable:
+    case tStorageActionTypes.setExport:
       state = {
         ...state,
         exportAvailable: storageInitialState.exportAvailable,

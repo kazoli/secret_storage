@@ -19,9 +19,11 @@ export const scrollToElement = (
 // Set data into localstorage
 export const setLocalStorage = (
   key: string,
-  value: string | object | object[],
+  value: string | number | object | object[],
 ) => {
-  if (typeof value !== 'string') value = JSON.stringify(value);
+  if (typeof value !== 'string') {
+    value = JSON.stringify(value);
+  }
   localStorage.setItem(key, value);
 };
 

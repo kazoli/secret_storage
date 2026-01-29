@@ -17,7 +17,7 @@ const FormSelectBlock = (props: tProps) => {
         classContainer=""
         classTrigger="w-[100%] shadow-[inset_0_0_0_1px_#d0d0d0] focus:shadow-[inset_0_0_0_1px_#d0d0d0,0_0_3px_0_#c0c0c0] rounded-[3px] p-[5px]"
         classList="left-[0] top-[100%] w-[max-content] mt-[5px] bg-[#f0f0f0] rounded-[3px] shadow-[0_0_5px_0_#d0d0d0]"
-        classElement="transition-custom block cursor-pointer mt-[5px] first-of-type:mt-[0] p-[5px] shadow-[inset_0_0_0_1px_#d0d0d0] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] rounded-[3px]"
+        classElement="transition-custom block cursor-pointer bg-[#fff] mt-[5px] first-of-type:mt-[0] p-[5px] shadow-[inset_0_0_0_1px_#d0d0d0] hover:shadow-[inset_0_0_3px_1px_#8563c5] hover:text-[#7a54bf] rounded-[3px]"
         options={selectData.options}
         action={props.action}
       />

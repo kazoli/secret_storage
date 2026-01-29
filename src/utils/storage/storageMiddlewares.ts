@@ -1,12 +1,9 @@
-import { tCustomConfirm, tFileContent, tStringObject } from '../general/types';
-import {
-  tStorageActionTypes,
-  tStorageActions,
-  tStorageDataBlock,
-  tStorageInitialState,
-  tStoragePayload,
-} from './storageTypes';
-import { storageInitialState, storageSettings } from './storageInitialStates';
+import { IntlShape } from 'react-intl';
+import { toast } from 'react-toastify';
+import { v4 as uuidV4 } from 'uuid';
+
+import { defaultMessages } from '../../providers/TranslationProvider';
+
 import {
   arrayReorder,
   bcryptCompare,
@@ -15,32 +12,33 @@ import {
   tweetNaClEncryptData,
   upperCaseFirst,
 } from '../general/middlewares';
-import { validateInput, validatePassword } from '../general/validations';
-import { v4 as uuidV4 } from 'uuid';
-import { toast } from 'react-toastify';
+import { validateInputLength, validatePassword } from '../general/validations';
+import { tCustomConfirm, tFileContent } from '../general/types';
 
-// Initialize categories to a drop down menu form from original object
-export const storageInitializeCategories = () => {
-  const categories: tStorageInitialState['categories'] = [];
-  for (const key in storageSettings.categoryInitialList) {
-    categories.push({
-      key: key,
-      value:
-        storageSettings.categoryInitialList[
-          key as keyof typeof storageSettings.categoryInitialList
-        ],
-    });
-  }
-  return categories;
-};
+import {
+  DEFAULT,
+  storageInitialState,
+  storageSettings,
+} from './storageInitialStates';
+import {
+  tStorageActionTypes,
+  tStorageActions,
+  tStorageDataBlock,
+  tStorageInitialState,
+  tStoragePayload,
+} from './storageTypes';
 
 // Validate login form data
-export const storageLoginValidate = async (password: string) => {
+export const storageLoginValidate = (
+  password: string,
+  translate: IntlShape['formatMessage'],
+) => {
   return validatePassword(
-    'Password',
+    () => translate(defaultMessages.common.password),
     password,
     storageSettings.passwordLength.min,
     storageSettings.passwordLength.max,
+    translate,
   );
 };
 
@@ -50,6 +48,7 @@ export const storageChangePasswordValidate = async (
   newPasswordAgain: string,
   password: string,
   encodedPassword: string,
+  translate: IntlShape['formatMessage'],
 ) => {
   const errors = {
     newPassword: '',
@@ -57,17 +56,20 @@ export const storageChangePasswordValidate = async (
     password: '',
   };
   errors.newPassword = validatePassword(
-    'New password',
+    () => translate(defaultMessages.changePassword.newPassword),
     newPassword,
     storageSettings.passwordLength.min,
     storageSettings.passwordLength.max,
+    translate,
   );
   if (newPassword !== newPasswordAgain) {
-    errors.newPasswordAgain = 'New passwords do not match';
+    errors.newPasswordAgain = translate(
+      defaultMessages.common.passwordMatchError,
+    );
   }
   const result = await bcryptCompare(password, encodedPassword);
   if (!result) {
-    errors.password = storageSettings.passwordCheckError;
+    errors.password = translate(defaultMessages.common.passwordCheckError);
   }
   return errors;
 };
@@ -79,6 +81,7 @@ export const storageDataValidate = async (
   data: string,
   password: string,
   encodedPassword: string,
+  translate: IntlShape['formatMessage'],
 ) => {
   const errors = {
     title: '',
@@ -86,27 +89,30 @@ export const storageDataValidate = async (
     data: '',
     password: '',
   };
-  errors.title = validateInput(
-    'Title',
+  errors.title = validateInputLength(
+    () => translate(defaultMessages.list.itemTitle),
     title,
     storageSettings.titleLength.min,
     storageSettings.titleLength.max,
+    translate,
   );
-  errors.category = validateInput(
-    'Category',
+  errors.category = validateInputLength(
+    () => translate(defaultMessages.list.itemCategory),
     category,
     storageSettings.categoryLength.min,
     storageSettings.categoryLength.max,
+    translate,
   );
-  errors.data = validateInput(
-    'Data',
+  errors.data = validateInputLength(
+    () => translate(defaultMessages.list.itemData),
     data,
     storageSettings.dataLength.min,
     storageSettings.dataLength.max,
+    translate,
   );
   const result = await bcryptCompare(password, encodedPassword);
   if (!result) {
-    errors.password = storageSettings.passwordCheckError;
+    errors.password = translate(defaultMessages.common.passwordCheckError);
   }
   return errors;
 };
@@ -117,6 +123,7 @@ export const storageParseFileContent = (
   fileContent: tFileContent,
   storageDispatch: React.Dispatch<tStorageActions>,
   encodedData: tStorageInitialState['encodedData'],
+  translate: IntlShape['formatMessage'],
 ) => {
   // reset previous content
   if (encodedData) {
@@ -142,15 +149,15 @@ export const storageParseFileContent = (
             },
           });
         } else {
-          fileError = 'Wrong structure of the file content';
+          fileError = translate(defaultMessages.login.fileErrorWrongStructure);
         }
       } catch (error) {
         console.error(error);
-        fileError = 'Selected file content cannot be parsed';
+        fileError = translate(defaultMessages.login.fileErrorParsing);
       }
     }
   } else {
-    fileError = 'File has wrong type or no content';
+    fileError = translate(defaultMessages.login.fileErrorWrongType);
   }
   return fileError;
 };
@@ -160,6 +167,7 @@ export const storageProcessFile = async (
   encodedData: tStorageInitialState['encodedData'],
   password: string,
   storageDispatch: React.Dispatch<tStorageActions>,
+  translate: IntlShape['formatMessage'],
 ) => {
   // set loading shows
   storageDispatch({
@@ -172,7 +180,6 @@ export const storageProcessFile = async (
   const processedData: tStoragePayload[tStorageActionTypes.setData] = {
     encodedPassword: '',
     encodedData: '',
-    categories: storageInitialState.categories,
     decodedData: [],
   };
   // there was stored data previously
@@ -184,21 +191,16 @@ export const storageProcessFile = async (
       // get decoded data from results
       processedData.decodedData = results.map((result) => ({
         id: result.id ?? uuidV4(),
-        title: result.title ?? 'Missing title',
+        title: result.title ?? translate(defaultMessages.list.itemMissingTitle),
         data: result.data ?? '',
         category: result.category ?? '',
       }));
-      // get categories from decoded data
-      processedData.categories = storageCategorySelect(
-        results,
-        storageInitialState.selectedCategory,
-      ).categories;
     } else {
-      error = storageSettings.passwordCheckError;
+      error = translate(defaultMessages.common.passwordCheckError);
     }
   } else {
     // no stored data previously so validate a new password
-    error = await storageLoginValidate(password);
+    error = storageLoginValidate(password, translate);
   }
   if (error) {
     // set status to idle
@@ -218,45 +220,43 @@ export const storageProcessFile = async (
   return error;
 };
 
-// Get the category object array in original order
-export const storageCategories = (
+// Get category select data from data list
+export const storageCategorySelect = (
   decodedData: tStorageInitialState['decodedData'],
-  ignoreEmpty = true,
+  selectedCategory: tStorageInitialState['selectedCategory'],
+  translate: IntlShape['formatMessage'],
 ) => {
   // create a set with unique categories
   const categorySet = new Set<tStorageDataBlock['category']>();
   // get all blocks of decoded data
   decodedData.forEach((data) => {
-    if (!ignoreEmpty || data.category) {
+    if (data.category) {
       categorySet.add(data.category);
     }
   });
-  // return the array from category set
-  return Array.from(categorySet).map((key) => ({
-    key,
-    value: key || storageSettings.categoryInitialList[''],
-  }));
-};
-
-// Get category select data from data list
-export const storageCategorySelect = (
-  decodedData: tStorageInitialState['decodedData'],
-  selectedCategory: tStorageInitialState['selectedCategory'],
-) => {
-  // get categories in proper form
-  let categories: tStorageInitialState['categories'] =
-    storageCategories(decodedData);
+  let categories: tStorageInitialState['categories'] = [];
   // if new categories has at least an element
-  if (categories.length) {
+  if (categorySet.size > 0) {
+    // creating categories array from set
+    const baseCategories = Array.from(categorySet).map((key) => ({
+      key,
+      value: key,
+    }));
     // sorting categories in ascending order
-    categories = arrayReorder(
-      categories as tStringObject[],
-      'key',
-      'asc',
-    ) as tStorageInitialState['categories'];
+    categories = arrayReorder(baseCategories, 'key', 'asc');
   }
   // adding initial values to the start of sorted array
-  categories = [...storageInitialState.categories, ...categories];
+  categories = [
+    {
+      key: DEFAULT,
+      value: translate(defaultMessages.list.categoryAll),
+    },
+    {
+      key: '',
+      value: translate(defaultMessages.list.categoryNone),
+    },
+    ...categories,
+  ];
   // if selected category is not the default and not inside categories then set default
   if (
     selectedCategory !== storageInitialState.selectedCategory &&
@@ -264,7 +264,7 @@ export const storageCategorySelect = (
   ) {
     selectedCategory = storageInitialState.selectedCategory;
   }
-  return { categories: categories, selectedCategory: selectedCategory };
+  return { selectedCategory, categories };
 };
 
 // Processing data block
@@ -278,6 +278,7 @@ export const storageProcessDataBlock = async (
   },
   encodedPassword: tStorageInitialState['encodedPassword'],
   storageDispatch: React.Dispatch<tStorageActions>,
+  translate: IntlShape['formatMessage'],
 ) => {
   storageDispatch({
     type: tStorageActionTypes.setStatus,
@@ -294,6 +295,7 @@ export const storageProcessDataBlock = async (
     processed.data,
     formData.password,
     encodedPassword,
+    translate,
   );
   if (errors.title || errors.category || errors.data || errors.password) {
     storageDispatch({
@@ -357,9 +359,10 @@ export const storageFilterList = (
 // Storage confirm default cancel
 export const storageConfirmDefaultCancel = (
   storageDispatch: React.Dispatch<tStorageActions>,
+  translate: IntlShape['formatMessage'],
 ) => {
   return {
-    text: 'Cancel',
+    text: translate(defaultMessages.common.cancelButton),
     action: () => {
       storageDispatch({
         type: tStorageActionTypes.setCustomConfirm,
@@ -375,8 +378,9 @@ export const storageExportConfirm = (
   decodedData: tStorageInitialState['decodedData'],
   encodedPassword: string,
   storageDispatch: React.Dispatch<tStorageActions>,
+  translate: IntlShape['formatMessage'],
 ): tCustomConfirm => ({
-  text: 'Enter your password to encode and export all data into a file.',
+  text: translate(defaultMessages.list.exportDataConfirmTitle),
   encodedPassword: encodedPassword,
   setLoading: (value) => {
     storageDispatch({
@@ -385,18 +389,20 @@ export const storageExportConfirm = (
     });
   },
   ok: {
-    text: 'Export data into file',
+    text: translate(defaultMessages.list.exportDataConfirmOk),
     action: (password) => {
-      storageExportData(fileName, decodedData, password!).then((result) => {
-        if (result) {
-          storageDispatch({
-            type: tStorageActionTypes.setExportUnavailable,
-          });
-        }
-      });
+      storageExportData(fileName, decodedData, password!, translate).then(
+        (result) => {
+          if (result) {
+            storageDispatch({
+              type: tStorageActionTypes.setExport,
+            });
+          }
+        },
+      );
     },
   },
-  cancel: storageConfirmDefaultCancel(storageDispatch),
+  cancel: storageConfirmDefaultCancel(storageDispatch, translate),
 });
 
 // Encode and export data
@@ -404,6 +410,7 @@ export const storageExportData = async (
   fileName: string,
   decodedData: tStorageInitialState['decodedData'],
   password: string,
+  translate: IntlShape['formatMessage'],
 ) => {
   const encodedData = tweetNaClEncryptData(decodedData, password);
   if (encodedData) {
@@ -431,7 +438,7 @@ export const storageExportData = async (
     }, 0);
     return true;
   } else {
-    toast.error('Encryption failed, please try to export again');
+    toast.error(translate(defaultMessages.list.exportDataError));
     return false;
   }
 };

@@ -14,6 +14,7 @@ export type tStorageInitialState = {
   loggedIn: boolean;
   encodedPassword: string;
   encodedData: string;
+  updateCategories: boolean;
   categories: tDropDownOption[];
   selectedCategory: string;
   keywords: string;
@@ -38,6 +39,8 @@ export enum tStorageActionTypes {
   changePassword = 'changePassword',
   setKeywords = 'setKeywords',
   setSelectedCategory = 'setSelectedCategory',
+  setCategories = 'setCategories',
+  resetCategories = 'resetCategories',
   setSearchType = 'setSearchType',
   setView = 'setView',
   setListOrderEditor = 'setListOrderEditor',
@@ -47,7 +50,7 @@ export enum tStorageActionTypes {
   setDataBlock = 'setDataBlock',
   setCustomConfirm = 'setCustomConfirm',
   deleteDataBlock = 'deleteDataBlock',
-  setExportUnavailable = 'setExport',
+  setExport = 'setExport',
 }
 
 // Types of payloads of storage actions
@@ -60,7 +63,6 @@ export type tStoragePayload = {
   [tStorageActionTypes.setData]: {
     encodedPassword: tStorageInitialState['encodedPassword'];
     encodedData: tStorageInitialState['encodedData'];
-    categories: tStorageInitialState['categories'];
     decodedData: tStorageInitialState['decodedData'];
   };
   [tStorageActionTypes.logIn]: {
@@ -70,6 +72,11 @@ export type tStoragePayload = {
   [tStorageActionTypes.changePassword]: tStorageInitialState['encodedPassword'];
   [tStorageActionTypes.setKeywords]: tStorageInitialState['keywords'];
   [tStorageActionTypes.setSelectedCategory]: tStorageInitialState['selectedCategory'];
+  [tStorageActionTypes.setCategories]: {
+    selectedCategory: tStorageInitialState['selectedCategory'];
+    categories: tStorageInitialState['categories'];
+  };
+  [tStorageActionTypes.resetCategories]: undefined;
   [tStorageActionTypes.setSearchType]: tStorageInitialState['searchType'];
   [tStorageActionTypes.setView]: tStorageInitialState['view'];
   [tStorageActionTypes.setListRepositionBlockId]: tStorageInitialState['listRepositionBlockId'];
@@ -79,7 +86,7 @@ export type tStoragePayload = {
   [tStorageActionTypes.setDataBlock]: tStorageDataBlock;
   [tStorageActionTypes.setCustomConfirm]: tStorageInitialState['customConfirm'];
   [tStorageActionTypes.deleteDataBlock]: tStorageDataBlock['id'];
-  [tStorageActionTypes.setExportUnavailable]: undefined;
+  [tStorageActionTypes.setExport]: undefined;
 };
 
 // Types of storage actions

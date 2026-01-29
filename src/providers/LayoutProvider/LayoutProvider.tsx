@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { useBeforeUnloadConfirm } from '../../utils/general/hooks';
 import { scrollToElement } from '../../utils/general/middlewares';
 
-import Loading from './Loading/Loading';
+import Loading from './Loading';
 import Header from './Header';
-import Footer from './Footer/Footer';
-import JumpTop from './JumpTop/JumpTop';
+import Footer from './Footer';
+import JumpTop from './JumpTop';
 import { tProps } from './types';
 
 const LayoutProvider = (props: tProps) => {
@@ -27,6 +29,7 @@ const LayoutProvider = (props: tProps) => {
       </main>
       <Footer />
       <JumpTop />
+      <ToastContainer autoClose={5000} className="whitespace-pre-line" />
     </>
   );
 };

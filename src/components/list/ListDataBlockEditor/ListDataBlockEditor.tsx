@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 
+import { defaultMessages } from '../../../providers/TranslationProvider';
 import {
   storageInitialState,
   storageProcessDataBlock,
@@ -16,7 +18,9 @@ import PopUp from '../../general/PopUp';
 import WarningBlock from '../../general/WarningBlock';
 
 const ListDataBlockEditor = () => {
+  const translate = useIntl().formatMessage;
   const { storageState, storageDispatch } = useAppContext();
+
   const [formData, setFormData] = useState({
     id: '',
     category: '',
@@ -52,17 +56,18 @@ const ListDataBlockEditor = () => {
 
   const buttons = [
     {
-      text: 'Save data',
+      text: translate(defaultMessages.list.saveDataButton),
       action: () => {
         storageProcessDataBlock(
           formData,
           storageState.encodedPassword,
           storageDispatch,
+          translate,
         ).then((errors) => setFormErrors(errors));
       },
     },
     {
-      text: 'Cancel',
+      text: translate(defaultMessages.common.cancelButton),
       action: () =>
         storageDispatch({
           type: tStorageActionTypes.setDataBlockEditor,
@@ -79,18 +84,24 @@ const ListDataBlockEditor = () => {
   return (
     <PopUp>
       <FormInputBlock
-        type="text"
-        label="Title"
         id="title"
-        placeholder={`${storageSettings.titleLength.min} - ${storageSettings.titleLength.max} characters length`}
+        type="text"
+        label={translate(defaultMessages.list.itemTitle)}
+        placeholder={translate(defaultMessages.common.inputLengthText, {
+          minLength: storageSettings.titleLength.min,
+          maxLength: storageSettings.titleLength.max,
+        })}
         value={formData.title}
         action={(value) => setFormData({ ...formData, title: value })}
         error={formErrors.title}
       />
       <FormTextAreaBlock
-        label="Data"
-        id="title"
-        placeholder={`${storageSettings.dataLength.min} - ${storageSettings.dataLength.max} characters length`}
+        id="data"
+        label={translate(defaultMessages.list.itemData)}
+        placeholder={translate(defaultMessages.common.inputLengthText, {
+          minLength: storageSettings.dataLength.min,
+          maxLength: storageSettings.dataLength.max,
+        })}
         minLength={storageSettings.dataLength.min}
         maxLength={storageSettings.dataLength.max}
         value={formData.data}
@@ -98,27 +109,28 @@ const ListDataBlockEditor = () => {
         error={formErrors.data}
       />
       <FormInputBlock
-        type="text"
-        label="Category"
         id="category"
-        placeholder={`Empty or up to ${storageSettings.categoryLength.max} characters length`}
+        type="text"
+        label={translate(defaultMessages.list.itemCategory)}
+        placeholder={translate(defaultMessages.list.itemCategoryPlaceholder, {
+          minLength: storageSettings.categoryLength.min,
+          maxLength: storageSettings.categoryLength.max,
+        })}
         value={formData.category}
         action={(value) => setFormData({ ...formData, category: value })}
         error={formErrors.category}
       />
       <FormPasswordBlock
-        label="Password"
         id="password"
-        placeholder="Enter your password"
+        label={translate(defaultMessages.common.password)}
+        placeholder={translate(defaultMessages.common.passwordEnterPlaceholder)}
         password={formData.password}
         passwordError={formErrors.password}
         action={(value) => setFormData({ ...formData, password: value })}
       />
       {warningMessage && (
         <WarningBlock
-          text={
-            'This data block may not appear in list after saving data because some list filters are in effect.'
-          }
+          text={translate(defaultMessages.list.hiddenDataWarning)}
           style="mt-[15px]"
         />
       )}

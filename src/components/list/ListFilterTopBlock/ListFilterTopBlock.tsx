@@ -1,3 +1,6 @@
+import { useIntl } from 'react-intl';
+
+import { defaultMessages } from '../../../providers/TranslationProvider';
 import {
   storageInitialState,
   tDropDownOption,
@@ -8,11 +11,13 @@ import {
 
 import ListFilterButton from '../ListFilterButton';
 import ListFilterSearch from '../ListFilterSearch';
-import ListFilterSelect from '../ListFilterSelect';
+import ListFilterSearchSelect from '../ListFilterSearchSelect';
 import ListFilterView from '../ListFilterView';
 
 const ListFilterTopBlock = () => {
+  const translate = useIntl().formatMessage;
   const { storageState, storageDispatch } = useAppContext();
+
   const listFilterShow =
     storageState.keywords !== storageInitialState.keywords ||
     storageState.searchType !== storageInitialState.searchType ||
@@ -67,14 +72,23 @@ const ListFilterTopBlock = () => {
       <ListFilterSearch />
       <div className="flex flex-wrap-reverse gap-[10px] flex-[1_1_100%] justify-between">
         <div className="flex flex-wrap gap-[10px]">
-          <ListFilterButton text="Add new item" action={setDataBlockEditor} />
-          <ListFilterButton text="Reorder list" action={setListOrderEditor} />
+          <ListFilterButton
+            text={translate(defaultMessages.list.addNewItemButton)}
+            action={setDataBlockEditor}
+          />
+          <ListFilterButton
+            text={translate(defaultMessages.list.reorderListButton)}
+            action={setListOrderEditor}
+          />
           {listFilterShow && (
-            <ListFilterButton text="Reset list" action={resetList} />
+            <ListFilterButton
+              text={translate(defaultMessages.list.resetListButton)}
+              action={resetList}
+            />
           )}
         </div>
         <div className="flex flex-wrap gap-[10px]">
-          <ListFilterSelect
+          <ListFilterSearchSelect
             selected={storageState.selectedCategory}
             options={storageState.categories}
             action={setSelectedCategory}

@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 
 import LayoutProvider from '../../providers/LayoutProvider';
 import CustomConfirm from '../../components/general/CustomConfirm';
 import FormPasswordBlock from '../../components/form/FormPasswordBlock';
 import FormButtonBlock from '../../components/form/FormButtonBlock';
+import {
+  defaultMessages,
+  useTranslationContext,
+} from '../../providers/TranslationProvider';
 import {
   bcryptHash,
   storageChangePasswordValidate,
@@ -15,12 +20,14 @@ import {
 } from '../../utils';
 
 const ChangePassword = () => {
-  useEffect(() => {
-    document.title = 'Secret storage - Set password';
-  }, []);
-
   const navigate = useNavigate();
+  const translate = useIntl().formatMessage;
+  const { locale } = useTranslationContext();
   const { storageState, storageDispatch } = useAppContext();
+
+  useEffect(() => {
+    document.title = translate(defaultMessages.changePassword.documentTitle);
+  }, [locale, translate]);
 
   useEffect(() => {
     if (!storageState.loggedIn) {
@@ -53,6 +60,7 @@ const ChangePassword = () => {
       formData.newPasswordAgain,
       formData.password,
       storageState.encodedPassword,
+      translate,
     ).then((errors) => {
       if (errors.newPassword || errors.newPasswordAgain || errors.password) {
         // if any field has error show related message
@@ -83,8 +91,14 @@ const ChangePassword = () => {
   };
 
   const buttons = [
-    { text: 'Change password', action: onSubmit },
-    { text: 'Cancel', action: onCancel },
+    {
+      text: translate(defaultMessages.changePassword.changePasswordButton),
+      action: onSubmit,
+    },
+    {
+      text: translate(defaultMessages.common.cancelButton),
+      action: onCancel,
+    },
   ];
 
   return (
@@ -98,17 +112,23 @@ const ChangePassword = () => {
           className="m-[0_auto] p-[10px_15px] rounded-[5px] bg-[#eee9f7] shadow-[inset_0_0_50px_0_#e2daf1,0_0_3px_0_#777] max-w-[500px]"
         >
           <FormPasswordBlock
-            label="New password"
             id="new-password"
-            placeholder={`${storageSettings.passwordLength.min} - ${storageSettings.passwordLength.max} characters`}
+            label={translate(defaultMessages.changePassword.newPassword)}
+            placeholder={translate(defaultMessages.common.inputLengthText, {
+              minLength: storageSettings.passwordLength.min,
+              maxLength: storageSettings.passwordLength.max,
+            })}
             password={formData.newPassword}
             passwordError={formErrors.newPassword}
             action={(value) => setFormData({ ...formData, newPassword: value })}
           />
           <FormPasswordBlock
-            label="New password again"
             id="new-password-again"
-            placeholder={`${storageSettings.passwordLength.min} - ${storageSettings.passwordLength.max} characters`}
+            label={translate(defaultMessages.changePassword.newPasswordAgain)}
+            placeholder={translate(defaultMessages.common.inputLengthText, {
+              minLength: storageSettings.passwordLength.min,
+              maxLength: storageSettings.passwordLength.max,
+            })}
             password={formData.newPasswordAgain}
             passwordError={formErrors.newPasswordAgain}
             action={(value) =>
@@ -116,9 +136,11 @@ const ChangePassword = () => {
             }
           />
           <FormPasswordBlock
-            label="Current password"
             id="password"
-            placeholder="Enter your password"
+            label={translate(defaultMessages.changePassword.currentPassword)}
+            placeholder={translate(
+              defaultMessages.common.passwordEnterPlaceholder,
+            )}
             password={formData.password}
             passwordError={formErrors.password}
             action={(value) => setFormData({ ...formData, password: value })}

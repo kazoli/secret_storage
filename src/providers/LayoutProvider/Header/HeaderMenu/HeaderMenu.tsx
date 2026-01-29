@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import { HiOutlineMenu } from 'react-icons/hi';
 
 import {
@@ -10,33 +11,52 @@ import {
   tStorageActionTypes,
   useAppContext,
 } from '../../../../utils';
-
 import DropDownMenu from '../../../../components/general/DropDownMenu';
+
+import { defaultMessages } from '../../../TranslationProvider';
 
 import { tProps } from './types';
 
 const HeaderMenu = (props: tProps) => {
+  const translate = useIntl().formatMessage;
   const navigate = useNavigate();
   const { storageState, storageDispatch } = useAppContext();
 
   const options = storageState.loggedIn
     ? [
-        { key: 'list', value: 'Data list' },
-        { key: 'changePassword', value: 'Change password' },
-        { key: 'exportAvailable', value: 'Export data' },
-        { key: 'logOut', value: 'Log out' },
+        {
+          key: 'list',
+          value: translate(defaultMessages.header.menuList),
+        },
+        {
+          key: 'changePassword',
+          value: translate(defaultMessages.header.menuChangePassword),
+        },
+        {
+          key: 'exportAvailable',
+          value: translate(defaultMessages.header.menuExportData),
+        },
+        {
+          key: 'logOut',
+          value: translate(defaultMessages.header.menuLogOut),
+        },
       ]
-    : [{ key: 'logIn', value: 'Log in' }];
+    : [
+        {
+          key: 'logIn',
+          value: translate(defaultMessages.header.menuLogIn),
+        },
+      ];
 
   const logOutConfirm: tCustomConfirm = {
-    text: 'You have changed data in the list and it has not been exported. Are you sure to continue to log out without exporting your data?',
+    text: translate(defaultMessages.header.logOutConfirmTitle),
     ok: {
-      text: 'Continue',
+      text: translate(defaultMessages.header.logOutConfirmOk),
       action: () => {
         storageDispatch({ type: tStorageActionTypes.logOut });
       },
     },
-    cancel: storageConfirmDefaultCancel(storageDispatch),
+    cancel: storageConfirmDefaultCancel(storageDispatch, translate),
   };
 
   const action = (value: tDropDownOption['key']) => {
@@ -65,6 +85,7 @@ const HeaderMenu = (props: tProps) => {
             storageState.decodedData,
             storageState.encodedPassword,
             storageDispatch,
+            translate,
           ),
         });
         break;

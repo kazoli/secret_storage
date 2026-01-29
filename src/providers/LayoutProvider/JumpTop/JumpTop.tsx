@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { scrollToElement } from '../../../utils/general/middlewares';
+import { useIntl } from 'react-intl';
 import { AiOutlineUpSquare } from 'react-icons/ai';
 
+import { scrollToElement } from '../../../utils/general/middlewares';
+import { defaultMessages } from '../../TranslationProvider';
+
 const JumpTop = () => {
+  const translate = useIntl().formatMessage;
   const [jumpTop, setJumpTop] = useState(false);
 
   useEffect(() => {
@@ -22,7 +26,7 @@ const JumpTop = () => {
     jumpTop && (
       <AiOutlineUpSquare
         className="fixed bottom-[15px] right-[15px] bg-[#909090] hover:bg-[#8563c5] text-[2rem] text-[#ffffff] cursor-pointer transition-custom opacity-50 hover:opacity-100 z-[1000] rounded-[3px]"
-        title="Jump top"
+        title={translate(defaultMessages.common.jumpTop)}
         onClick={() => scrollToElement('smooth')}
       />
     )

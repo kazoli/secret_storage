@@ -40,7 +40,7 @@ const DropDownMenu = (props: tProps) => {
         {props.options.map((element) => (
           <li
             key={element.key}
-            className={`bg-[#fff] ${props.classElement}`}
+            className={props.classElement}
             onClick={() => props.action(element.key)}
           >
             {element.value}

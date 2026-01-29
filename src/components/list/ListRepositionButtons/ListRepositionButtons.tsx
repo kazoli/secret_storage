@@ -1,12 +1,18 @@
 import { JSX, useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import { BsArrowsMove } from 'react-icons/bs';
 import { FcCancel } from 'react-icons/fc';
 import { VscDebugStepBack, VscDebugStepOver } from 'react-icons/vsc';
 
+import { defaultMessages } from '../../../providers/TranslationProvider';
+
 import IconButton from '../../general/IconButton';
+
 import { tProps } from './types';
 
 const ListRepositionButtons = (props: tProps) => {
+  const translate = useIntl().formatMessage;
+
   const [buttons, setButtons] = useState<JSX.Element>();
 
   useEffect(() => {
@@ -14,7 +20,7 @@ const ListRepositionButtons = (props: tProps) => {
       setButtons(
         <IconButton
           style="hover"
-          title="Reposition"
+          title={translate(defaultMessages.list.repositionButton)}
           leftIcon={<BsArrowsMove />}
           action={() => props.selectAction(props.dataId)}
         />,
@@ -23,7 +29,7 @@ const ListRepositionButtons = (props: tProps) => {
       setButtons(
         <IconButton
           style="hover"
-          title="Cancel reposition"
+          title={translate(defaultMessages.list.repositionCancelButton)}
           leftIcon={<FcCancel />}
           action={() => props.selectAction(false)}
         />,
@@ -33,13 +39,13 @@ const ListRepositionButtons = (props: tProps) => {
         <>
           <IconButton
             style="hover"
-            title="Insert before this"
+            title={translate(defaultMessages.list.insertBeforeButton)}
             leftIcon={<VscDebugStepBack />}
             action={() => props.repositionAction('before')}
           />
           <IconButton
             style="hover"
-            title="Insert after this"
+            title={translate(defaultMessages.list.insertAfterButton)}
             leftIcon={<VscDebugStepOver />}
             action={() => props.repositionAction('after')}
           />

@@ -1,62 +1,67 @@
 import { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
 
 import {
   arrayReorder,
-  storageCategories,
+  DEFAULT,
   tDropDownOption,
   tStorageActionTypes,
   tStorageDataBlock,
   tStorageInitialState,
   useAppContext,
 } from '../../../utils';
+import { defaultMessages } from '../../../providers/TranslationProvider';
 
 import PopUp from '../../general/PopUp';
-import FormSelectBlock from '../../form/FormSelectBlock';
 import CommentBlock from '../../general/CommentBlock';
+import FormSelectBlock from '../../form/FormSelectBlock';
 import FormButtonBlock from '../../form/FormButtonBlock';
 
 import ListOrderCategoryBlock from '../ListOrderCategoryBlock';
 
 const ListOrderEditor = () => {
+  const translate = useIntl().formatMessage;
   const { storageState, storageDispatch } = useAppContext();
-  const [order, setOrder] = useState<tDropDownOption['key']>('default');
+
+  const [order, setOrder] = useState<tDropDownOption['key']>(DEFAULT);
   const [categories, setCategories] = useState<
     tStorageInitialState['categories']
   >([]);
 
   useEffect(() => {
-    setCategories(storageCategories(storageState.decodedData, false));
-  }, [storageState.decodedData]);
+    // dropping first default category
+    setCategories(storageState.categories.slice(1));
+  }, [storageState.categories]);
 
   const options = [
     {
-      key: 'default',
-      value: 'Current order',
+      key: DEFAULT,
+      value: translate(defaultMessages.list.orderDefault),
     },
     {
       key: 'title-asc',
-      value: 'Title (A-Z)',
+      value: translate(defaultMessages.list.orderTitleAsc),
     },
     {
       key: 'title-desc',
-      value: 'Title (Z-A)',
+      value: translate(defaultMessages.list.orderTitleDesc),
     },
     {
       key: 'category-asc',
-      value: 'Category (A-Z)',
+      value: translate(defaultMessages.list.orderCategoryAsc),
     },
     {
       key: 'category-desc',
-      value: 'Category (Z-A)',
+      value: translate(defaultMessages.list.orderCategoryDesc),
     },
     {
       key: 'category-custom',
-      value: 'Category (My own order)',
+      value: translate(defaultMessages.list.orderCategoryCustom),
     },
   ];
 
   const reorderList = () => {
-    if (order === 'default') {
+    if (order === DEFAULT) {
       storageDispatch({
         type: tStorageActionTypes.setListOrderEditor,
         payload: false,
@@ -80,11 +85,11 @@ const ListOrderEditor = () => {
 
   const buttons = [
     {
-      text: 'Reorder list',
+      text: translate(defaultMessages.list.reorderButton),
       action: reorderList,
     },
     {
-      text: 'Cancel',
+      text: translate(defaultMessages.common.cancelButton),
       action: () =>
         storageDispatch({
           type: tStorageActionTypes.setListOrderEditor,
@@ -96,19 +101,20 @@ const ListOrderEditor = () => {
   return (
     <PopUp>
       <FormSelectBlock
-        label="List order"
+        label={translate(defaultMessages.list.orderSelectorTitle)}
         selected={order}
         options={options}
         action={(value) => setOrder(value)}
       />
-      <ListOrderCategoryBlock
-        visible={order === 'category-custom'}
-        categories={categories}
-        setCategories={setCategories}
-      />
+      {order === 'category-custom' && (
+        <ListOrderCategoryBlock
+          categories={categories}
+          setCategories={setCategories}
+        />
+      )}
       <CommentBlock
         style="mt-[15px]"
-        text="You need to export data to keep the new order. If you would like the category order primarily and the title order inside a category, then first reorder by title and next by category."
+        text={translate(defaultMessages.list.orderComment)}
       />
       <FormButtonBlock buttons={buttons} />
     </PopUp>

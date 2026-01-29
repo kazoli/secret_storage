@@ -19,29 +19,27 @@ const ListOrderCategoryBlock = (props: tProps) => {
   };
 
   return (
-    props.visible && (
-      <div className="mt-[15px] grid sm:grid-cols-[repeat(auto-fill,minmax(265px,1fr))] gap-[15px]">
-        {props.categories.map((category) => {
-          const categoryKey = category.key.toString();
-          return (
-            <span
-              key={categoryKey}
-              className="flex items-center gap-[5px] bg-[#fff] border border-[#d0d0d0] rounded-[3px] p-[5px]"
-            >
-              <ListRepositionButtons
-                dataId={categoryKey}
-                selectedId={selectedId}
-                selectAction={setSelectedId}
-                repositionAction={(position) =>
-                  reposition({ id: categoryKey, position })
-                }
-              />
-              {category.value}
-            </span>
-          );
-        })}
-      </div>
-    )
+    <div className="mt-[15px] grid sm:grid-cols-[repeat(auto-fill,minmax(265px,1fr))] gap-[15px]">
+      {props.categories.map((category) => {
+        const categoryKey = category.key.toString();
+        return (
+          <span
+            key={categoryKey}
+            className="flex items-center gap-[5px] bg-[#fff] border border-[#d0d0d0] rounded-[3px] p-[5px]"
+          >
+            <ListRepositionButtons
+              dataId={categoryKey}
+              selectedId={selectedId}
+              selectAction={setSelectedId}
+              repositionAction={(position) =>
+                reposition({ id: categoryKey, position })
+              }
+            />
+            {category.value}
+          </span>
+        );
+      })}
+    </div>
   );
 };
 

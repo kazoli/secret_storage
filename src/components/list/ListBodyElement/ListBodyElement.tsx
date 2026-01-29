@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 import {
   AiOutlineDelete,
   AiOutlineEdit,
@@ -6,6 +7,7 @@ import {
   AiOutlineEyeInvisible,
 } from 'react-icons/ai';
 
+import { defaultMessages } from '../../../providers/TranslationProvider';
 import {
   repositionBlocks,
   storageConfirmDefaultCancel,
@@ -15,16 +17,23 @@ import {
   tReposition,
   useAppContext,
 } from '../../../utils';
+
 import IconButton from '../../general/IconButton';
+
 import ListRepositionButtons from '../ListRepositionButtons';
+
 import { tProps } from './types';
 
 const ListBodyElement = (props: tProps) => {
+  const translate = useIntl().formatMessage;
   const { storageState, storageDispatch } = useAppContext();
+
   const [show, setShow] = useState(false);
 
   const deleteConfirm: tCustomConfirm = {
-    text: `Enter your password to delete "${props.dataBlock.title}" block.`,
+    text: translate(defaultMessages.list.deleteDataConfirmTitle, {
+      title: props.dataBlock.title,
+    }),
     encodedPassword: storageState.encodedPassword,
     setLoading: (value) => {
       storageDispatch({
@@ -33,7 +42,7 @@ const ListBodyElement = (props: tProps) => {
       });
     },
     ok: {
-      text: 'Delete',
+      text: translate(defaultMessages.list.deleteDataConfirmOk),
       action: () => {
         storageDispatch({
           type: tStorageActionTypes.deleteDataBlock,
@@ -41,7 +50,7 @@ const ListBodyElement = (props: tProps) => {
         });
       },
     },
-    cancel: storageConfirmDefaultCancel(storageDispatch),
+    cancel: storageConfirmDefaultCancel(storageDispatch, translate),
   };
 
   const repositionAction = (position: tReposition['position']) => {
@@ -63,8 +72,10 @@ const ListBodyElement = (props: tProps) => {
         <span
           title={
             storageState.selectedCategory === props.dataBlock.category
-              ? 'Clear category filtering'
-              : `Filter to "${props.dataBlock.category}" category`
+              ? translate(defaultMessages.list.removeCategoryFilterLink)
+              : translate(defaultMessages.list.categoryFilterLink, {
+                  category: props.dataBlock.category,
+                })
           }
           className="text-[#0000ff] hover:underline cursor-pointer"
           onClick={() => {
@@ -88,7 +99,7 @@ const ListBodyElement = (props: tProps) => {
             onClick={() => setShow(!show)}
             className="text-[#0000ff] hover:underline cursor-pointer"
           >
-            Show
+            {translate(defaultMessages.list.itemDataShowButton)}
           </span>
         )}
       </div>
@@ -96,13 +107,17 @@ const ListBodyElement = (props: tProps) => {
         <div className="flex flex-wrap gap-[15px]">
           <IconButton
             style="hover"
-            title={show ? 'Hide data' : 'Show data'}
+            title={
+              show
+                ? translate(defaultMessages.list.itemDataHideButton)
+                : translate(defaultMessages.list.itemDataShowButton)
+            }
             leftIcon={show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             action={() => setShow(!show)}
           />
           <IconButton
             style="hover"
-            title="Edit data"
+            title={translate(defaultMessages.list.itemDataEditButton)}
             leftIcon={<AiOutlineEdit />}
             action={() =>
               storageDispatch({
@@ -113,7 +128,7 @@ const ListBodyElement = (props: tProps) => {
           />
           <IconButton
             style="hover"
-            title="Edit data"
+            title={translate(defaultMessages.list.itemDataDeleteButton)}
             leftIcon={<AiOutlineDelete />}
             action={() =>
               storageDispatch({

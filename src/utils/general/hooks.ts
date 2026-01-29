@@ -37,7 +37,7 @@ export const useSelectData = (
     });
     if (!selectData.selected) {
       // select first option if empty or wrong selected value was sent
-      selectData.selected = options[0].value;
+      selectData.selected = options[0]?.value;
       // drop the first option from list
       selectData.options.shift();
     }
